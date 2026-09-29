@@ -53,6 +53,8 @@ const eslintConfig = defineConfig([
     // Test output:
     "playwright-report/**",
     "test-results/**",
+    // The pinned upstream docs and the index built from them (spec §3):
+    "corpus/**",
   ]),
 ]);
 
