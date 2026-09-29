@@ -73,6 +73,23 @@ describe("verifyQuote", () => {
     expect(verifyQuote(quote, PASSAGE)).toEqual({ status: "not-found" });
   });
 
+  // A quote cut inside a word is not verbatim: S-11 allows only whitespace, quote style,
+  // Unicode form and letter case.
+  it.each([
+    ["a quote that starts inside a word", "mbed many values in", "embed many values in one call"],
+    ["a quote that ends inside a word", "embed many val", "embed many values in one call"],
+  ])("does not verify %s", (_, quote, passage) => {
+    expect(verifyQuote(quote, passage)).toEqual({ status: "not-found" });
+  });
+
+  it.each([
+    ["the passage's edges", "embed many values", "embed many values", 0, 17],
+    ["punctuation", "(embed many values).", "embed many values", 1, 18],
+    ["a later whole-word match", "reembed many values; embed many values", "embed many values", 21, 38],
+  ])("verifies a whole-word quote at %s", (_, passage, quote, start, end) => {
+    expect(verifyQuote(quote, passage)).toEqual({ status: "verified", start, end });
+  });
+
   it("accepts 3 to 25 words (R-11)", () => {
     const words = Array.from({ length: 30 }, (_, i) => `w${i}`);
     const passage = words.join(" ");

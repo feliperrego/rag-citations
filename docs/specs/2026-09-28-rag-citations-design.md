@@ -387,6 +387,12 @@ Before the plan was written, a throwaway prototype of this spec was built, revie
 | A-11 | **A Portuguese answer in the e2e.** The mock answers in English, so the e2e cannot check that a Portuguese question gets a Portuguese answer. That stays with rule 3 of §6.1 (pinned by the prompt unit test) and the production check of §12 step 4. The alternative is a mock scenario that answers in Portuguese | 10, 12 |
 | A-12 | **Page description** (metadata): "Answers questions from the AI SDK Core docs, citing each passage and checking every quote against it, by Felipe Rêgo." | 7 |
 
+**From the final review of the implementation (2026-09-29)** `[P]`:
+
+| ID | Proposal | Section |
+|---|---|---|
+| A-13 | **Whole words only.** A quote verifies only when it starts and ends at word edges in the passage. For example, "mbed many values in" no longer verifies against "embed many values in one call". S-11 allows whitespace, quote style, Unicode form and letter case, and nothing else, so a quote cut inside a word is not verbatim. This makes the check stricter; it can only lower the rate | 6.3 |
+
 ## Appendix A. Approved proposals (2026-09-28, "todas ok")
 
 **Section 1, architecture and flow:**

@@ -69,9 +69,20 @@ export function normalise(text: string): string {
   return normaliseMapped(text).text;
 }
 
+const WORD_CHAR = /[\p{L}\p{N}]/u;
+
+/** A match that starts or ends inside a word is not verbatim (S-11 allows no partial words). */
+function atWordEdges(text: string, at: number, needle: string): boolean {
+  const end = at + needle.length;
+  const cutAtStart = WORD_CHAR.test(needle[0]) && at > 0 && WORD_CHAR.test(text[at - 1]);
+  const cutAtEnd = WORD_CHAR.test(needle[needle.length - 1]) && WORD_CHAR.test(text[end] ?? "");
+  return !cutAtStart && !cutAtEnd;
+}
+
 /**
- * Checks that a quote of 3 to 25 words is in its passage, after normalising both (spec §6.3).
- * When verified, start and end select the match in the original passage, for the <mark>.
+ * Checks that a quote of 3 to 25 words is in its passage, after normalising both (spec §6.3),
+ * as whole words. When verified, start and end select the match in the original passage, for
+ * the <mark>.
  */
 export function verifyQuote(quote: string, passage: string): Verification {
   const needle = normalise(quote);
@@ -81,9 +92,12 @@ export function verifyQuote(quote: string, passage: string): Verification {
     return { status: "not-found" };
   }
   const { text, starts, ends } = normaliseMapped(passage);
-  const at = text.indexOf(needle);
-  if (at === -1) return { status: "not-found" };
-  return { status: "verified", start: starts[at], end: ends[at + needle.length - 1] };
+  for (let at = text.indexOf(needle); at !== -1; at = text.indexOf(needle, at + 1)) {
+    if (atWordEdges(text, at, needle)) {
+      return { status: "verified", start: starts[at], end: ends[at + needle.length - 1] };
+    }
+  }
+  return { status: "not-found" };
 }
 
 /**

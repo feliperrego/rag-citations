@@ -18981,7 +18981,7 @@ These follow the template spec §6 and §9 (U-04):
 3. Add the **Upstash for Redis** integration to **Production only**, with no custom prefix (S-21, U-02, U-04).
 4. Redeploy after changing variables.
 
-Until Task 15 commits the real index, `/api/chat` fails loudly in Production, by design (spec §4.3). The page itself renders.
+Until Task 15 commits the real index, the **Production build fails**, by design: `next build` evaluates the chat route, and loading a mock-mode index in real mode throws (spec §4.3). No Production deployment exists before Task 15. Preview deploys, which run in mock mode, succeed.
 
 ---
 
@@ -19041,8 +19041,13 @@ Expected:
 - `"mock":false`, `"rateLimit":"upstash"`, and the model `openai/gpt-6-luna`;
 - the `data-commit` value equals `git rev-parse main`.
 
-- [ ] **Step 2: Production checks** (spec §12 step 4), each with Felipe's OK, a few calls:
+- [ ] **Step 2: Put the live URL in the README**
+
+Replace `<demo URL>` on README line 3 with the production URL. Then run `AI_MOCK=1 pnpm exec vitest run tests/readme.test.ts`. Expected: it passes.
+
+- [ ] **Step 3: Production checks** (spec §12 step 4), each with Felipe's OK, a few calls:
 - one suggested question in English, and one in Portuguese under the PT interface: the Portuguese answer keeps English quotes;
+- one question that passes the gate but that the passages cannot answer: the model's refusal gets `data-refusal="model"`. If the model wraps the sentence in quotes or changes it, `isRefusalText` misses it and the refusal-accuracy line would be skewed. Record that and tell Felipe before Task 17;
 - the out-of-scope suggested question: `data-refusal="gate"`;
 - one "View source on GitHub" link opens with the passage's lines selected;
 - Felipe's phone check at 375 px.
@@ -19066,7 +19071,7 @@ MEASURE_URL=https://<production URL> MEASURE_LOCATION='<city, connection>' MEASU
 ```
 
 Then `MEASURE_RUN=2`, then `MEASURE_RUN=3`.
-Expected: each run writes `measurements/citations-run-<r>-YYYY-MM-DD.json`. On any failure or 429 the run writes `.aborted.json` instead: read the reason and tell Felipe.
+Expected: each run writes `measurements/citations-run-<r>-YYYY-MM-DD.json`. On any failure or 429 the run writes `.aborted.json` instead: read the reason and tell Felipe. An abort reading "0 answers" means the model returned an empty completion, which the page hides. It is rare with `reasoning: "none"`; run that question again in a later hour.
 
 - [ ] **Step 3: Aggregate**
 
