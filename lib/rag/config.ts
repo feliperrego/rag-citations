@@ -16,3 +16,6 @@ export const CORPUS_DIR = "corpus/ai-sdk-core";
  */
 export const APACHE_LICENSE_SHA256 =
   "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30";
+
+/** A ## section longer than this many whitespace-separated words is split at its ### (S-25). */
+export const MAX_SECTION_WORDS = 1500;

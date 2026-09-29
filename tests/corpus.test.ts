@@ -3,7 +3,14 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { ESLint } from "eslint";
 import { describe, expect, it } from "vitest";
-import { APACHE_LICENSE_SHA256, CORPUS_COMMIT, CORPUS_DIR, CORPUS_TAG } from "@/lib/rag/config";
+import { chunkCorpus, countWords } from "@/lib/rag/chunk";
+import {
+  APACHE_LICENSE_SHA256,
+  CORPUS_COMMIT,
+  CORPUS_DIR,
+  CORPUS_TAG,
+  MAX_SECTION_WORDS,
+} from "@/lib/rag/config";
 import { corpusHash, corpusManifest, readCorpus } from "@/lib/rag/corpus";
 
 const files = readCorpus(CORPUS_DIR);
@@ -33,6 +40,78 @@ describe("the committed corpus", () => {
     expect(sha256("corpus/LICENSE-2.0.txt")).toBe(APACHE_LICENSE_SHA256);
     for (const file of ["corpus/LICENSE", "corpus/LICENSE-2.0.txt"]) {
       expect(sources, file).toContain(`\`${sha256(file)}\``);
+    }
+  });
+});
+
+/** The integers start..end, inclusive. */
+function range(start: number, end: number): number[] {
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+}
+
+/** The "### " lines outside fenced code, whose fences are all ``` at column 0. */
+function subheadings(lines: string[]): string[] {
+  let code = false;
+  return lines.filter((line) => {
+    if (line.startsWith("```")) code = !code;
+    return !code && line.startsWith("### ");
+  });
+}
+
+// Checks written apart from lib/rag/chunk.ts, on the pinned files (spec §4.1, S-22).
+describe("the chunks of the committed corpus", () => {
+  const chunks = chunkCorpus(files);
+  const contents = new Map(files.map(({ file, content }) => [file, content]));
+
+  it("cover every line after the frontmatter exactly once, in order", () => {
+    for (const { file, content } of files) {
+      const lines = content.split("\n");
+      expect(lines.at(-1), `${file} ends with a newline`).toBe("");
+      const firstBodyLine = lines.indexOf("---", 1) + 2;
+      const covered = chunks
+        .filter((chunk) => chunk.file === file)
+        .flatMap(({ startLine, endLine }) => range(startLine, endLine));
+      expect(covered, file).toEqual(range(firstBodyLine, lines.length - 1));
+    }
+  });
+
+  it("hold exactly the file's raw lines startLine..endLine", () => {
+    for (const { id, file, startLine, endLine, text } of chunks) {
+      const lines = contents.get(file)!.split("\n");
+      expect(text, id).toBe(lines.slice(startLine - 1, endLine).join("\n"));
+    }
+  });
+
+  it("never split a fenced code block", () => {
+    // The count below assumes every fence is ``` at column 0, as in the pinned files.
+    const fenceLines = files.flatMap(({ content }) =>
+      content.split("\n").filter((line) => /^\s*(```|~~~)/.test(line)),
+    );
+    expect(fenceLines.every((line) => line.startsWith("```"))).toBe(true);
+    for (const { id, text } of chunks) {
+      const fences = text.split("\n").filter((line) => line.startsWith("```"));
+      expect(fences.length % 2, id).toBe(0);
+    }
+  });
+
+  it("are headed by the file's title, then by their own first line's heading", () => {
+    for (const { id, file, heading, text } of chunks) {
+      const [title, ...path] = heading.split(" › ");
+      expect(title, id).toBe(/^title: (.*)$/m.exec(contents.get(file)!)?.[1]);
+      if (path.length > 0) {
+        expect(text.split("\n")[0], id).toBe(`${"#".repeat(path.length + 1)} ${path.at(-1)}`);
+      }
+    }
+  });
+
+  it("have unique ids", () => {
+    expect(new Set(chunks.map((chunk) => chunk.id)).size).toBe(chunks.length);
+  });
+
+  it("are longer than MAX_SECTION_WORDS only when no ### heading is left to split at", () => {
+    const long = chunks.filter((chunk) => countWords(chunk.text) > MAX_SECTION_WORDS);
+    for (const { id, text } of long) {
+      expect(subheadings(text.split("\n").slice(1)), id).toEqual([]);
     }
   });
 });
