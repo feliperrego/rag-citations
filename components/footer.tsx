@@ -1,5 +1,5 @@
 // Each project generated from the template sets its own repo URL here (spec §9).
-const REPO_URL = "https://github.com/feliperrego/ai-portfolio-template";
+const REPO_URL = "https://github.com/feliperrego/rag-citations";
 
 export function Footer() {
   return (

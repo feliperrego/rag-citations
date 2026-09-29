@@ -105,7 +105,7 @@ describe("when Upstash is configured", () => {
     expect(h.slidingArgs).toEqual([20, "1 h"]);
     expect(h.ratelimitConfig).toMatchObject({
       limiter: "sliding-window",
-      prefix: "ai-portfolio-template",
+      prefix: "rag-citations",
     });
     expect(h.redisConfig).toEqual({ url: "https://example.upstash.io", token: "token" });
   });
