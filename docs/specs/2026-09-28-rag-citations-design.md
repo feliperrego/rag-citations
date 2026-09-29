@@ -160,14 +160,14 @@ taken from the AI SDK Core documentation at version 7.0.114.
   - an unfinished marker, meaning a text suffix that matches the marker-prefix pattern.
 - An unfinished marker stays hidden only while streaming. When the stream ends, it is shown as plain text and counts as malformed.
 
-### 6.3 Verification [D: R-11, R-14; normalisation D: S-11, A-14]
+### 6.3 Verification [D: R-11, R-14; normalisation D: S-11, A-14; whole words D: A-13]
 
 - `verifyQuote(quote, passage)` is a pure function. It returns a status and, when verified, the match's start and end offsets in the original passage, for the `<mark>`.
 - **Normalisation, the whole list** [D: S-11, A-14]: Markdown links reduced to their text; NFKC; curly quotes and dashes made straight; whitespace collapsed; case-folded. It is applied to both strings. Other Markdown and MDX syntax (backticks, `**`, JSX) is compared as it is. Until A-14, links were compared as they are too.
 - A quote must have 3–25 words.
 - Statuses [D: R-11; D: S-12 for malformed]:
   - `verified`;
-  - `not-found`: the quote is not in the passage, or it has the wrong length, or it contains `"]`;
+  - `not-found`: the quote is not in the passage as whole words, or it has the wrong length, or it contains `"]`. A match that starts or ends inside a word does not count: "mbed many values in" does not verify against "embed many values in one call" [D: A-13];
   - `unknown-source`: `n` is outside 1–5;
   - `malformed`: a citation attempt that is not a well-formed marker. It counts in the denominator.
 - **One code path** [D: R-14]: the same result draws the badge on screen and sets `data-citation-verified="true|false"` on each inline `[n]` button, and only there, one per attempt. The measurement script reads it, as #1's script read `data-ttft-ms` [F: #1 spec §5.2, §5.4].
@@ -349,8 +349,8 @@ To be recorded, dated, as the rollout steps happen.
   - The page serves `data-commit` `a6143a3`, statically, in English.
   - A `text/plain` POST gets a 415.
 - **README.** The live-demo link was filled in (plan Task 16, step 2).
-- **Checks in Chrome**, with Felipe's OK: five requests, four of them model calls.
-  1. **"How do I embed many values in parallel?"** (EN). The answer carries 2 citations, `[5]` and `[1]`, both `data-citation-verified="true"`. The Sources list shows "1 of 1 quotes verified" for each. The answer also contains a fenced code block, against rule 4 of §6.1. It renders as plain text. (Corrected on 2026-09-29, after the measurement: S-14's trigger counts code-like text outside backticks, so a fenced block does not count toward it. The first version of this line said it did.)
+- **Checks in Chrome**, with Felipe's OK: four chat requests, three of which reached the language model (check 4's gate refusal only embeds the question), plus one GitHub link. (Corrected on 2026-09-29 by the wrap-up review; this line first said "five requests, four of them model calls".)
+  1. **"How do I embed many values in parallel?"** (EN). The answer carries 2 citations, `[5]` and `[1]`, both `data-citation-verified="true"`. The Sources list shows "1 of 1 quotes verified" for each. The answer also contains a fenced code block, against rule 4 of §6.1. It renders as plain text, but it counts toward S-14's trigger: `pnpm count-code-answers` counts a code fence anywhere in an answer, as well as `=>`, braces or `import` outside backticks [F: `lib/measure/code-answers.ts`]. (Corrected twice on 2026-09-29. After the measurement, a correction said a fenced block does not count; the wrap-up review read the script, which does count it, so the first version of this line was right.)
   2. **"Como gerar embeddings de vários textos em paralelo?"** (PT interface, `lang=pt-BR`). The answer is in Portuguese with English quotes (R-12). It carries 2 citations to `[1]`, one verified and one not found. The unverified quote dropped the Markdown link syntax the passage has: the passage has `` [`embedMany`](/docs/reference/ai-sdk-core/embed-many) ``, and the quote has only `` `embedMany` ``. Under S-11, Markdown syntax is compared as it is, so this counts as not found. The model also wrote a code block here.
   3. **"View source on GitHub"** opens `30-embeddings.mdx?plain=1#L27-L50` in GitHub's code view, with lines 27–50 selected.
   4. **"How do I enable dark mode in Tailwind CSS?"** (EN). The fixed English refusal, with `data-refusal="gate"`, no Sources list and no citations.
@@ -368,7 +368,7 @@ To be recorded, dated, as the rollout steps happen.
   - All 5 out-of-scope questions were refused by the gate. In-scope refused: 8 of 40, 5 by the gate and 3 by the model (D1).
   - The 11 unverified citations are all `not-found`. By script over their quotes: 4 carry a backslash escape the model wrote inside the marker, `\"` in m07 and `\n` three times in m34 (the D2 class); 2 have fewer than 3 words (m30, m31). The other 5, by my reading [P]: the model edited or joined the text. m13 dropped a comma, m17 a `//`, m31 joined two list items, m36 two table rows, and m33 dropped a link's backticks along with its syntax, which A-14 keeps.
   - S-14: `pnpm count-code-answers` counts 0 of 32 answers with code-like text outside backticks, so the trigger did not fire, and none of the 32 answers has a fenced block [F: script]. Answers stay plain text [D: R-10]. The fenced blocks of the production checks came from 2 answers outside the measurement.
-  - For #3: the escape class covers `\n` as well as `\"`, 4 of the 11 unverified citations. The ROADMAP candidate says so.
+  - For #3: the escape class covers `\n` as well as `\"`, 4 of the 11 unverified citations. Felipe's D2 answer covered `\"`, the only escape seen after run 1; reading `\n` as a line break too is my proposal [P], because the `\n` cases appeared in run 3. The ROADMAP candidate says so.
 
 ## 17. Proposals and answers
 
@@ -441,13 +441,13 @@ Before the plan was written, a throwaway prototype of this spec was built, revie
 
 | ID | Proposal | Section |
 |---|---|---|
-| A-13 | **Whole words only.** A quote verifies only when it starts and ends at word edges in the passage. For example, "mbed many values in" no longer verifies against "embed many values in one call". S-11 allows whitespace, quote style, Unicode form and letter case, and nothing else, so a quote cut inside a word is not verbatim. This makes the check stricter; it can only lower the rate | 6.3 |
+| A-13 | **Whole words only.** A quote verifies only when it starts and ends at word edges in the passage. For example, "mbed many values in" no longer verifies against "embed many values in one call". S-11 allows whitespace, quote style, Unicode form and letter case, and nothing else (A-14 later added link syntax), so a quote cut inside a word is not verbatim. This makes the check stricter; it can only lower the rate | 6.3 |
 
 **From the production checks of §16 (2026-09-29)**, Felipe's choice between (a) keeping S-11 as it is and (b) allowing link syntax: "B" (2026-09-29), cited as `[D: A-14]`. Its details (link text that wraps a line, the mark over a cut link, a quote with half a link not verifying) were confirmed the same day ("todas ok"):
 
 | ID | Decision | Section |
 |---|---|---|
-| A-14 | **Markdown links reduced to their text.** Before comparing, each inline link `[text](url)`, with an optional title, becomes `text`, in the quote and in the passage. The link text may wrap onto the next line, but not across a blank line. A quote that keeps the link syntax still verifies. The `<mark>` covers the original text: the whole link when the quote starts or ends at the link's text, and the cut link's `[` or `](url)` when the quote starts or ends inside it. Other Markdown and MDX syntax is still compared as it is. Why: in production check 2 the model quoted `` [`embedMany`](/docs/…) `` as `` `embedMany` ``, words a reader sees in the passage, and S-11 counted that as not found. This makes the check looser; it can only raise the rate, and the README and the printed caveat say so. The mock quotes and the corpus test copy words with links reduced | 6.3, 11 |
+| A-14 | **Markdown links reduced to their text.** Before comparing, each inline link `[text](url)`, with an optional title, becomes `text`, in the quote and in the passage. The link text may wrap onto the next line, but not across a blank line. A quote that keeps the link syntax still verifies. The `<mark>` covers the original text: the whole link when the quote starts or ends at the link's text, and the cut link's `[` or `](url)` when the quote starts or ends inside it. Other Markdown and MDX syntax is still compared as it is. Why: in production check 2 the model quoted `` [`embedMany`](/docs/…) `` as `` `embedMany` ``, words a reader sees in the passage, and S-11 counted that as not found. This makes the check looser for a quote that writes a link as its text, and the README and the printed caveat say so. It is not only looser: a quote that keeps half of a link's syntax, such as `see [the docs page`, used to verify as a plain substring and is now not found, so it can also lower the rate. No quote in the 2026-09-29 measurement contains link syntax [F: script]. (Corrected on 2026-09-29 by the wrap-up review; this row first said it "can only raise the rate".) The mock quotes and the corpus test copy words with links reduced | 6.3, 11 |
 
 ## Appendix A. Approved proposals (2026-09-28, "todas ok")
 
