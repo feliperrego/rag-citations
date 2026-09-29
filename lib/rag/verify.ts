@@ -75,8 +75,9 @@ function normaliseMapped(original: string): Mapped {
   const endOf = (end: number) => {
     const last = origin[end - 1] + 1;
     const next = origin[end];
-    // The units between the last kept one and the next are dropped link syntax: `](url)`.
-    return end < plain.length && next > last && original[last] === "]" ? next : last;
+    // The units between the last kept one and the next are dropped link syntax: `](url)`. At the
+    // end of the text, origin's last entry is the text's length, so a closing link counts too.
+    return next > last && original[last] === "]" ? next : last;
   };
   return {
     text: inner.text,

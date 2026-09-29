@@ -101,6 +101,11 @@ describe("verifyQuote", () => {
     );
   });
 
+  it("marks the whole link when a quote ends at a link that ends the passage (A-14)", () => {
+    const passage = "Use the helper from [the docs page](/x)";
+    expect(mark("helper from the docs page", passage)).toBe("helper from [the docs page](/x)");
+  });
+
   it("marks the original text, cut link syntax included, when a quote ends or starts inside a link's text (A-14)", () => {
     const passage = "Use [`embedMany` for batches](/docs/embed-many) of values.";
     expect(mark("Use `embedMany` for", passage)).toBe("Use [`embedMany` for");
