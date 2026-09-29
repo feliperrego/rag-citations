@@ -372,6 +372,7 @@ To be recorded, dated, as the rollout steps happen.
 - **Wrap-up review** [F: an independent review of the README, §16, §18 and the ROADMAP entry, each finding checked by a skeptic]. It confirmed 14 findings; the doc and code fixes are in `fe5df57` and `778e394`, each with a note of what the line said before. Two changed README text, and Felipe approved both on 2026-09-29 ("todas ok") [D]:
   - **P1.** The ids in brackets after each answer classification name in-scope answers only, and the line now says so: "gate refusal 10 (in scope: m03, …)". Before, 10 gate refusals showed 5 ids, because the 5 correct out-of-scope refusals are counted under refusal accuracy, not listed.
   - **P2.** The caveat names dash style: "allowing only whitespace, quote and dash style, …". The normalisation always folded dashes (§6.3); the README left them out.
+- **Size (R-23).** Felipe's real hours on #2 were not measured: asked on 2026-09-29, he answered "não sei" [D]. What git shows [F]: the spec was committed on 2026-09-28 at 18:30 -03, after that day's design session, and the last commit is from 2026-09-29 at 20:24 -03, with execution agent-driven in between; the roadmap estimated 2 days. The ROADMAP's calibration trigger moves to #3, with a way to measure there.
 
 ## 17. Proposals and answers
 
