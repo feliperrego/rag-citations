@@ -1,5 +1,6 @@
 import type { MockLanguageModelV4 } from "ai/test";
 import { REFUSAL_SENTENCES } from "@/lib/rag/refusal";
+import { withoutMarkdownLinks } from "@/lib/rag/verify";
 
 /**
  * Per-request behaviour of the chat mock (spec §10, S-27). Its doStream reads the question and
@@ -122,15 +123,18 @@ const FENCE = /^\s*(```|~~~)/;
  * null when the passage has fewer than 3, as a heading alone does.
  */
 export function mockQuote(passage: string): string | null {
+  // Quotes copy the words as a reader sees them, with links reduced to their text (A-14).
+  // Reducing keeps every line break, so line i of both texts is the same line.
+  const readable = withoutMarkdownLinks(passage).split("\n");
   let inFence = false;
-  for (const line of passage.split("\n")) {
+  for (const [i, line] of passage.split("\n").entries()) {
     if (FENCE.test(line)) inFence = !inFence;
-    const words = line.trim().split(/\s+/);
+    const words = readable[i].trim().split(/\s+/);
     if (!inFence && /^[A-Za-z]/.test(line) && words.length >= MIN_QUOTE_WORDS) {
       return words.slice(0, QUOTE_WORDS).join(" ");
     }
   }
-  const words = passage.trim().split(/\s+/);
+  const words = withoutMarkdownLinks(passage).trim().split(/\s+/);
   return words.length >= MIN_QUOTE_WORDS ? words.slice(0, QUOTE_WORDS).join(" ") : null;
 }
 

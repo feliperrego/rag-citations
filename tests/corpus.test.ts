@@ -14,7 +14,7 @@ import {
 } from "@/lib/rag/config";
 import { corpusHash, corpusManifest, readCorpus } from "@/lib/rag/corpus";
 import { readIndexFile } from "@/lib/rag/index-file";
-import { normalise, verifyQuote } from "@/lib/rag/verify";
+import { normalise, verifyQuote, withoutMarkdownLinks } from "@/lib/rag/verify";
 
 const files = readCorpus(CORPUS_DIR);
 
@@ -127,15 +127,23 @@ function quotesFrom(text: string, n: number): string[] {
   return starts.map((start) => words.slice(start, start + n).join(" "));
 }
 
+// A mark reduces whole links to their text; one that starts or ends inside a link's text also
+// holds the cut link's `](url)` or `[` (A-14), which this drops from both sides.
+const LINK_SYNTAX = /\[|\]\([^()\s]*(?:\s+"[^"\n]*")?\)/g;
+const withoutLinkSyntax = (text: string) => text.replace(LINK_SYNTAX, "");
+
 // verifyQuote on the real MDX passages (spec §6.3): a phrase copied from a passage is verified,
 // and its mark holds that phrase, so the quote is literally at the GitHub link (spec §4.1).
 describe("quotes copied from the committed passages", () => {
   it("are verified, and their mark holds the quote", () => {
     for (const { id, text } of chunkCorpus(files)) {
-      for (const quote of quotesFrom(text, 10)) {
+      // Copied as a reader sees the passage, with links reduced to their text (A-14).
+      for (const quote of quotesFrom(withoutMarkdownLinks(text), 10)) {
         const result = verifyQuote(quote, text);
         const mark = result.status === "verified" ? text.slice(result.start, result.end) : null;
-        expect(mark && normalise(mark), `${id}: ${quote}`).toBe(normalise(quote));
+        expect(mark && withoutLinkSyntax(normalise(mark)), `${id}: ${quote}`).toBe(
+          withoutLinkSyntax(normalise(quote)),
+        );
       }
     }
   });

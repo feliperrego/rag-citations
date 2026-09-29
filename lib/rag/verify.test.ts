@@ -17,9 +17,9 @@ describe("normalise", () => {
     expect(normalise(input)).toBe(output);
   });
 
-  it("compares Markdown and MDX syntax as it is (S-11)", () => {
+  it("reduces a Markdown link to its text and compares other Markdown and MDX as it is (A-14)", () => {
     const mdx = "**Note:** see [the docs](/docs) and <Note>`embed`</Note>";
-    expect(normalise(mdx)).toBe(mdx.toLowerCase());
+    expect(normalise(mdx)).toBe("**note:** see the docs and <note>`embed`</note>");
   });
 });
 
@@ -73,8 +73,42 @@ describe("verifyQuote", () => {
     expect(verifyQuote(quote, PASSAGE)).toEqual({ status: "not-found" });
   });
 
-  // A quote cut inside a word is not verbatim: S-11 allows only whitespace, quote style,
-  // Unicode form and letter case.
+  // The model drops link syntax when it quotes (spec §16, production check 2); A-14 allows it.
+  const LINKED =
+    "The AI SDK provides the [`embedMany`](/docs/reference/ai-sdk-core/embed-many) function for this purpose.";
+  it.each([
+    ["without the link syntax", "The AI SDK provides the `embedMany` function for this purpose."],
+    ["with the link syntax kept", LINKED],
+  ])("verifies a quote of a linked passage %s, marking the original text (A-14)", (_, quote) => {
+    expect(verifyQuote(quote, LINKED)).toEqual({ status: "verified", start: 0, end: LINKED.length });
+  });
+
+  it("reduces a link whose text wraps onto the next line (A-14)", () => {
+    const passage = "See the [OpenAI provider\ndocumentation](/providers/openai#mcp-tool) for details.";
+    expect(mark("See the OpenAI provider documentation for details.", passage)).toBe(passage);
+    expect(mark("See the [OpenAI provider documentation](/providers/openai#mcp-tool) for", passage)).toBe(
+      passage.slice(0, -" details.".length),
+    );
+  });
+
+  it("marks the whole link when a quote starts or ends at a link's text (A-14)", () => {
+    const passage = "Use [`embedMany` for batches](/docs/embed-many) of values.";
+    expect(mark("`embedMany` for batches of values", passage)).toBe(
+      "[`embedMany` for batches](/docs/embed-many) of values",
+    );
+    expect(mark("Use `embedMany` for batches", passage)).toBe(
+      "Use [`embedMany` for batches](/docs/embed-many)",
+    );
+  });
+
+  it("marks the original text, cut link syntax included, when a quote ends or starts inside a link's text (A-14)", () => {
+    const passage = "Use [`embedMany` for batches](/docs/embed-many) of values.";
+    expect(mark("Use `embedMany` for", passage)).toBe("Use [`embedMany` for");
+    expect(mark("for batches of values", passage)).toBe("for batches](/docs/embed-many) of values");
+  });
+
+  // A quote cut inside a word is not verbatim: S-11 and A-14 allow only whitespace, quote style,
+  // Unicode form, letter case and link syntax.
   it.each([
     ["a quote that starts inside a word", "mbed many values in", "embed many values in one call"],
     ["a quote that ends inside a word", "embed many val", "embed many values in one call"],

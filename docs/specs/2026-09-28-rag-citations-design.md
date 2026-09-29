@@ -11,7 +11,7 @@
 |---|---|
 | `[F]` | Fact, with its source. |
 | `[D]` | Decision taken by Felipe, with a reference. |
-| `[P]` | Proposal or estimate, not yet confirmed. Estimates and inferences say so (`[P: arithmetic …]`, `[P: estimate]`, `[P: inference]`) and need no answer. The S-xx and X-01 items of §17 were approved and are cited as `[D: S-xx]`. A-07 to A-12 in §18 were approved on 2026-09-29. None is open. |
+| `[P]` | Proposal or estimate, not yet confirmed. Estimates and inferences say so (`[P: arithmetic …]`, `[P: estimate]`, `[P: inference]`) and need no answer. The S-xx and X-01 items of §17 were approved and are cited as `[D: S-xx]`. A-07 to A-14 in §18 were approved on 2026-09-29. None is open. |
 
 Decision references:
 
@@ -160,10 +160,10 @@ taken from the AI SDK Core documentation at version 7.0.114.
   - an unfinished marker, meaning a text suffix that matches the marker-prefix pattern.
 - An unfinished marker stays hidden only while streaming. When the stream ends, it is shown as plain text and counts as malformed.
 
-### 6.3 Verification [D: R-11, R-14; normalisation D: S-11]
+### 6.3 Verification [D: R-11, R-14; normalisation D: S-11, A-14]
 
 - `verifyQuote(quote, passage)` is a pure function. It returns a status and, when verified, the match's start and end offsets in the original passage, for the `<mark>`.
-- **Normalisation, the whole list** [D: S-11]: NFKC; curly quotes and dashes made straight; whitespace collapsed; case-folded. It is applied to both strings. Markdown and MDX syntax (backticks, `**`, links, JSX) is compared as it is.
+- **Normalisation, the whole list** [D: S-11, A-14]: Markdown links reduced to their text; NFKC; curly quotes and dashes made straight; whitespace collapsed; case-folded. It is applied to both strings. Other Markdown and MDX syntax (backticks, `**`, JSX) is compared as it is. Until A-14, links were compared as they are too.
 - A quote must have 3–25 words.
 - Statuses [D: R-11; D: S-12 for malformed]:
   - `verified`;
@@ -171,7 +171,7 @@ taken from the AI SDK Core documentation at version 7.0.114.
   - `unknown-source`: `n` is outside 1–5;
   - `malformed`: a citation attempt that is not a well-formed marker. It counts in the denominator.
 - **One code path** [D: R-14]: the same result draws the badge on screen and sets `data-citation-verified="true|false"` on each inline `[n]` button, and only there, one per attempt. The measurement script reads it, as #1's script read `data-ttft-ms` [F: #1 spec §5.2, §5.4].
-- A verified quote proves the words are in the passage, not that the passage supports the claim [F: brief, Gao et al. 2023]. The README states this caveat, and says what "verbatim" allows: whitespace, quote style, Unicode form and letter case [D: S-11].
+- A verified quote proves the words are in the passage, not that the passage supports the claim [F: brief, Gao et al. 2023]. The README states this caveat, and says what "verbatim" allows: whitespace, quote style, Unicode form, letter case and a Markdown link written as its text [D: S-11, A-14].
 
 ## 7. The interface
 
@@ -356,8 +356,8 @@ To be recorded, dated, as the rollout steps happen.
   4. **"How do I enable dark mode in Tailwind CSS?"** (EN). The fixed English refusal, with `data-refusal="gate"`, no Sources list and no citations.
   5. **"How do I store embeddings in Postgres with pgvector?"**, the calibration case that passes the EN gate (0.4668 ≥ 0.4421). The model gave the exact refusal sentence, with `data-refusal="model"` and no citations.
 - **Two findings for Felipe, before the measurement:**
-  - (a) The model writes fenced code blocks, in 2 of 2 answers, despite the instructions. S-14's trigger will likely fire.
-  - (b) The model drops Markdown link syntax inside quotes, which S-11 counts against the rate.
+  - (a) The model writes fenced code blocks, in 2 of 2 answers, despite the instructions. S-14's trigger will likely fire. Felipe's answer (2026-09-29, "pode seguir"): keep S-14 as it is and decide after the measurement, when `pnpm count-code-answers` gives the count [D].
+  - (b) The model drops Markdown link syntax inside quotes, which S-11 counts against the rate. Felipe's answer (2026-09-29, option "B"): allow it, as A-14 in §18 [D].
 
 ## 17. Proposals and answers
 
@@ -374,7 +374,7 @@ All items below were approved on 2026-09-28 ("todas ok"); X-01 took option (a).
 | S-04 | The success criteria as written | 1 |
 | S-09 | The gate refuses in the interface language; the model refuses in the question's language | 8 |
 | S-10 | Refusal accuracy is supporting data, never a second headline | 11 |
-| S-11 | "Verbatim" allows whitespace, quote style, Unicode form and letter case, and the README says so | 6.3 |
+| S-11 | "Verbatim" allows whitespace, quote style, Unicode form and letter case, and the README says so (A-14 later added link syntax) | 6.3 |
 | S-12 | Malformed citations and unfinished markers count as unverified, in the denominator; answers without citations are listed as failures | 6.2, 6.3, 11 |
 | S-13 | The measurement set is English only; Portuguese is checked by hand, and the README says so | 11 |
 | S-20 | The interval is a seeded bootstrap over questions, not Wilson over citations | 11 |
@@ -426,11 +426,17 @@ Before the plan was written, a throwaway prototype of this spec was built, revie
 | A-11 | **A Portuguese answer in the e2e.** The mock answers in English, so the e2e cannot check that a Portuguese question gets a Portuguese answer. That stays with rule 3 of §6.1 (pinned by the prompt unit test) and the production check of §12 step 4. The alternative is a mock scenario that answers in Portuguese | 10, 12 |
 | A-12 | **Page description** (metadata): "Answers questions from the AI SDK Core docs, citing each passage and checking every quote against it, by Felipe Rêgo." | 7 |
 
-**From the final review of the implementation (2026-09-29)** `[P]`:
+**From the final review of the implementation (2026-09-29)**, approved by Felipe on 2026-09-29 ("1-13 aprovada") and cited as `[D: A-13]`:
 
 | ID | Proposal | Section |
 |---|---|---|
 | A-13 | **Whole words only.** A quote verifies only when it starts and ends at word edges in the passage. For example, "mbed many values in" no longer verifies against "embed many values in one call". S-11 allows whitespace, quote style, Unicode form and letter case, and nothing else, so a quote cut inside a word is not verbatim. This makes the check stricter; it can only lower the rate | 6.3 |
+
+**From the production checks of §16 (2026-09-29)**, Felipe's choice between (a) keeping S-11 as it is and (b) allowing link syntax: "B" (2026-09-29), cited as `[D: A-14]`. Its details (link text that wraps a line, the mark over a cut link, a quote with half a link not verifying) were confirmed the same day ("todas ok"):
+
+| ID | Decision | Section |
+|---|---|---|
+| A-14 | **Markdown links reduced to their text.** Before comparing, each inline link `[text](url)`, with an optional title, becomes `text`, in the quote and in the passage. The link text may wrap onto the next line, but not across a blank line. A quote that keeps the link syntax still verifies. The `<mark>` covers the original text: the whole link when the quote starts or ends at the link's text, and the cut link's `[` or `](url)` when the quote starts or ends inside it. Other Markdown and MDX syntax is still compared as it is. Why: in production check 2 the model quoted `` [`embedMany`](/docs/…) `` as `` `embedMany` ``, words a reader sees in the passage, and S-11 counted that as not found. This makes the check looser; it can only raise the rate, and the README and the printed caveat say so. The mock quotes and the corpus test copy words with links reduced | 6.3, 11 |
 
 ## Appendix A. Approved proposals (2026-09-28, "todas ok")
 

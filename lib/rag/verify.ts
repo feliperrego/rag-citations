@@ -28,12 +28,65 @@ function fold(grapheme: string): string {
 /** Normalised text, with the original range [start, end) that each UTF-16 unit came from. */
 type Mapped = { text: string; starts: number[]; ends: number[] };
 
+// An inline Markdown link, [text](url) with an optional "title": reduced to its text (A-14).
+// Its text can wrap onto the next line, but not across a blank line.
+const MARKDOWN_LINK = /\[((?:[^\[\]\n]|\n(?![ \t]*\n))+)\]\([^()\s]*(?:\s+"[^"\n]*")?\)/g;
+
+/** The text with each Markdown link reduced to its text (A-14), as a reader sees it. */
+export function withoutMarkdownLinks(text: string): string {
+  return text.replace(MARKDOWN_LINK, "$1");
+}
+
+/** The text with each Markdown link reduced to its text, and where each kept unit came from. */
+function withoutLinks(original: string): { text: string; origin: number[] } {
+  let text = "";
+  const origin: number[] = [];
+  const keep = (from: number, to: number) => {
+    text += original.slice(from, to);
+    for (let i = from; i < to; i++) origin.push(i);
+  };
+  let last = 0;
+  for (const match of original.matchAll(MARKDOWN_LINK)) {
+    keep(last, match.index);
+    keep(match.index + 1, match.index + 1 + match[1].length);
+    last = match.index + match[0].length;
+  }
+  keep(last, original.length);
+  origin.push(original.length);
+  return { text, origin };
+}
+
 /**
  * Normalises grapheme by grapheme, so every output character maps back to the original text:
- * NFKC can compose or expand characters, and whitespace collapses. A run of whitespace becomes
- * one space, mapped to the whole run; leading and trailing whitespace is dropped.
+ * links reduce to their text, NFKC can compose or expand characters, and whitespace collapses.
+ * A run of whitespace becomes one space, mapped to the whole run; leading and trailing
+ * whitespace is dropped. A match that runs to the end of a link's text also takes in the rest
+ * of the link, so the <mark> covers the whole link.
  */
 function normaliseMapped(original: string): Mapped {
+  const { text: plain, origin } = withoutLinks(original);
+  const inner = normaliseText(plain);
+  const startOf = (start: number) => {
+    const first = origin[start];
+    // A dropped `[` right before the first kept unit opens a link: the <mark> starts there.
+    const dropped = start === 0 ? first > 0 : origin[start - 1] < first - 1;
+    return dropped && original[first - 1] === "[" ? first - 1 : first;
+  };
+  const endOf = (end: number) => {
+    const last = origin[end - 1] + 1;
+    const next = origin[end];
+    // The units between the last kept one and the next are dropped link syntax: `](url)`.
+    return end < plain.length && next > last && original[last] === "]" ? next : last;
+  };
+  return {
+    text: inner.text,
+    starts: inner.starts.map((start) => startOf(start)),
+    ends: inner.ends.map((end) => endOf(end)),
+  };
+}
+
+/** The grapheme-by-grapheme normalisation of text without links, mapped to that text. */
+function normaliseText(original: string): Mapped {
   const mapped: Mapped = { text: "", starts: [], ends: [] };
   const append = (value: string, start: number, end: number) => {
     mapped.text += value;
@@ -62,8 +115,9 @@ function normaliseMapped(original: string): Mapped {
 }
 
 /**
- * The whole normalisation (spec §6.3, S-11): NFKC, curly quotes and dashes made straight,
- * whitespace collapsed, case-folded. Markdown and MDX syntax is left as it is.
+ * The whole normalisation (spec §6.3, S-11, A-14): Markdown links reduced to their text, NFKC,
+ * curly quotes and dashes made straight, whitespace collapsed, case-folded. Other Markdown and
+ * MDX syntax is left as it is.
  */
 export function normalise(text: string): string {
   return normaliseMapped(text).text;
