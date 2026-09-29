@@ -320,6 +320,28 @@ The roadmap says #1's lessons go into the template when #2 starts [F: ROADMAP.md
 
 To be recorded, dated, as the rollout steps happen.
 
+### Publish and Vercel setup (2026-09-29)
+
+- **GitHub** [F]: the public repo `feliperrego/rag-citations` was created and `main` pushed at `fbbfa67`, with Felipe's OK. The first CI run passed, with no repository secrets.
+- **Vercel project** [F: `vercel env ls`, `vercel project inspect`]: `rag-citations` runs Node 24.x in iad1.
+  - `AI_MODEL` and `RATE_LIMIT_PER_HOUR` are set for Production only.
+  - `AI_MOCK` is set for Preview only.
+  - `ENABLE_EXPERIMENTAL_COREPACK` is set for Production and Preview.
+- **Rate-limit store** [D: Felipe, 2026-09-29]. The Marketplace offered no free plan for a second Upstash database, only pay-as-you-go and fixed paid plans. Felipe chose to connect the existing free database `streaming-chat-ratelimit` from #1, for Production only and with no prefix. Its five variables are set for Production only. The two apps' keys stay apart by prefix (`streaming-chat` and `rag-citations`). #1 and #2 now share that database, so it must outlive #1.
+- **AI Gateway budget** [D: Felipe, 2026-09-29]. There is one team budget of US$ 5 a month, refreshed monthly, for all projects. The template's per-project budget (U-03) is replaced by this account-wide cap. The credit balance was US$ 15.00.
+
+### Real index and calibration (2026-09-29) [F]
+
+- **Credentials.** `vercel env pull .env.local` wrote only `VERCEL_OIDC_TOKEN`; the file is git-ignored.
+- **Index.** `EMBEDDING_MODEL=openai/text-embedding-3-small pnpm build-index`: 1536 dimensions, 101,831 tokens (about US$ 0.002), 239 chunks from 32 files, and corpus hash `8d11fa94…5ee`, the same as the mock index. `corpus/index.json` is 2,476,286 bytes.
+- **Calibration.** `pnpm calibrate` embedded the 60 questions of `calibration/questions.json` (sha256 `f379fd98…d6f0`):
+  - Rule 3 fired: no single threshold separates the EN and PT questions. The best single one, 0.3672, misclassifies 8.
+  - No language separates on its own either, so rule 4 chose one threshold per interface language, frozen in `lib/rag/config.ts`:
+    - **EN 0.4421** misclassifies 3 of 30. Two answerable questions are refused by the gate: en-in-02 "make the model pick one label from a fixed list", at 0.3683, and en-in-05 "give a tool an API key without putting it in the prompt", at 0.4244. One out-of-scope question passes to the model, which is the second layer: en-out-02 "pgvector", at 0.4668.
+    - **PT 0.3427** misclassifies 3 of 30. One answerable question is refused: pt-in-02 "rótulo de uma lista fixa", at 0.2893. Two out-of-scope questions pass to the model: pt-out-02 "pgvector", at 0.3846, and pt-out-12 "next/image", at 0.3662.
+  - All 8 suggested prompts land on the right side (S-28). Exit code 0.
+- **Checks after freezing.** Lint, typecheck and 751 unit tests pass. A real-mode `next build` passes and lists `○ /`. The mock e2e passes 82/82.
+
 ## 17. Proposals and answers
 
 All items below were approved on 2026-09-28 ("todas ok"); X-01 took option (a).

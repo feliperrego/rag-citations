@@ -32,11 +32,12 @@ export const K = 5;
 export type RefusalThreshold = number | Readonly<Record<Locale, number>>;
 
 /**
- * The gate refuses when the best cosine score is below this (spec §8). The calibration of step 3
- * freezes it here, with its date and the calibration file's hash. Until then it is unset, so a
- * real-mode load throws (spec §4.3).
+ * The gate refuses when the best cosine score is below this (spec §8). No single threshold
+ * separated the English and Portuguese questions, so there is one per interface language (rule 3),
+ * each the value that misclassifies the fewest of that language's questions (rule 4).
+ * Calibrated on 2026-09-29 with calibration/questions.json, sha256 f379fd988d6d2158da4fd011aadc365cab2d4bf2d101505bbbc2111b4f84d6f0.
  */
-export const REFUSAL_THRESHOLD: RefusalThreshold | null = null;
+export const REFUSAL_THRESHOLD: RefusalThreshold | null = { en: 0.44209528758554995, "pt-BR": 0.3426526989034122 };
 
 /**
  * The gate's threshold in mock mode, for the word-hash embedder (spec §8, R-19, S-27).
