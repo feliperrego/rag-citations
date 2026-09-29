@@ -27,7 +27,9 @@ describe("playwright.config.ts", () => {
   it("has only the chromium project and a local mock server without MEASURE_URL", async () => {
     const config = await loadConfig();
     expect(config.projects?.map((project) => project.name)).toEqual(["chromium"]);
-    expect(config.webServer).toMatchObject({ env: { AI_MOCK: "1", PORT: "3100" } });
+    expect(config.webServer).toMatchObject({
+      env: { AI_MOCK: "1", PORT: "3100", RATE_LIMIT_PER_HOUR: "20" },
+    });
   });
 
   it("adds a measure project on MEASURE_URL: no retries, one worker, no local server", async () => {

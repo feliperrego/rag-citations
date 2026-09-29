@@ -1,5 +1,5 @@
 /**
- * Chat limits shared by the client and the server, as in #1 (R-07).
+ * Chat settings shared by the client and the server, as in #1 (R-07).
  * Keep this module free of server-only imports: client components import it.
  */
 
@@ -14,3 +14,6 @@ export const FIRST_CHUNK_TIMEOUT_MS = 20_000;
 
 /** streamText timeout between content chunks (#1 D-S-04). */
 export const CHUNK_TIMEOUT_MS = 15_000;
+
+/** Autoscroll keeps following while the view is at most this far from the bottom (#1 D-S-08). */
+export const SCROLL_THRESHOLD_PX = 80;
