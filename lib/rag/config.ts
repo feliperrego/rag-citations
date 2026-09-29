@@ -25,6 +25,9 @@ export const MAX_SECTION_WORDS = 1500;
 /** The index built from the corpus (spec §4.2), shipped with the chat route (spec §4.4). */
 export const INDEX_PATH = "corpus/index.json";
 
+/** Passages retrieved per question (spec §4.4, R-04). */
+export const K = 5;
+
 /** One threshold, or one per interface language when no single one separates both (§8, R-18). */
 export type RefusalThreshold = number | Readonly<Record<Locale, number>>;
 
@@ -34,3 +37,11 @@ export type RefusalThreshold = number | Readonly<Record<Locale, number>>;
  * real-mode load throws (spec §4.3).
  */
 export const REFUSAL_THRESHOLD: RefusalThreshold | null = null;
+
+/**
+ * The gate's threshold in mock mode, for the word-hash embedder (spec §8, R-19, S-27).
+ * tests/mock-threshold.test.ts pins it against the mock index: the three EN in-scope suggested
+ * prompts and every e2e scenario question score at least this; the EN and PT out-of-scope
+ * prompts score below it.
+ */
+export const MOCK_REFUSAL_THRESHOLD = 0.19;
