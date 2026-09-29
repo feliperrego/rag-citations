@@ -1,0 +1,485 @@
+{
+  "about": "The calibration set of spec §8 (R-18, S-06), written and committed before any score was seen. It has answerable and near-miss out-of-scope questions in each interface language; each pt-BR question translates the en question with the same number. An answerable question names the pinned passage that answers it (file and heading) and a phrase copied from it. A near-miss is an AI or web topic the docs do not cover, named by terms no corpus file contains. It never overlaps measurements/questions.json (R-20).",
+  "questions": [
+    {
+      "id": "en-in-01",
+      "language": "en",
+      "answerable": true,
+      "question": "How do I log errors that happen while streaming text?",
+      "file": "05-generating-text.mdx",
+      "heading": "Generating Text › `streamText` › `onError` callback",
+      "evidence": "To log errors, you can provide an `onError` callback that is triggered when an error occurs."
+    },
+    {
+      "id": "en-in-02",
+      "language": "en",
+      "answerable": true,
+      "question": "How can I make the model pick one label from a fixed list?",
+      "file": "10-generating-structured-data.mdx",
+      "heading": "Generating Structured Data › Output Types",
+      "evidence": "when you expect the model to choose from a specific set of string options"
+    },
+    {
+      "id": "en-in-03",
+      "language": "en",
+      "answerable": true,
+      "question": "How do I force the model to call one specific tool?",
+      "file": "15-tools-and-tool-calling.mdx",
+      "heading": "Tool Calling › Tool Choice",
+      "evidence": "the model must call the specified tool"
+    },
+    {
+      "id": "en-in-04",
+      "language": "en",
+      "answerable": true,
+      "question": "Which transport should I use to connect to an MCP server in production?",
+      "file": "16-mcp-tools.mdx",
+      "heading": "Model Context Protocol (MCP) › Initializing an MCP Client",
+      "evidence": "We recommend using HTTP transport (like `StreamableHTTPClientTransport`) for production deployments."
+    },
+    {
+      "id": "en-in-05",
+      "language": "en",
+      "answerable": true,
+      "question": "How do I give a tool an API key without putting it in the prompt?",
+      "file": "17-runtime-and-tool-context.mdx",
+      "heading": "Runtime and Tool Context › Choosing the Right Context",
+      "evidence": "Use `toolsContext` and `contextSchema` for values needed by a specific tool, such as API keys"
+    },
+    {
+      "id": "en-in-06",
+      "language": "en",
+      "answerable": true,
+      "question": "Which Node.js version does code mode need?",
+      "file": "18-code-mode.mdx",
+      "heading": "Code Mode",
+      "evidence": "It requires Node.js 22 or newer and is not available in browser or edge runtimes."
+    },
+    {
+      "id": "en-in-07",
+      "language": "en",
+      "answerable": true,
+      "question": "What temperature should I use for tool calls?",
+      "file": "20-prompt-engineering.mdx",
+      "heading": "Prompt Engineering › Tips",
+      "evidence": "For tool calls and object generation, it's recommended to use `temperature: 0`"
+    },
+    {
+      "id": "en-in-08",
+      "language": "en",
+      "answerable": true,
+      "question": "How many times does the AI SDK retry a failed call by default?",
+      "file": "25-settings.mdx",
+      "heading": "Settings › Request Options",
+      "evidence": "Maximum number of retries. Set to 0 to disable retries. Default: `2`."
+    },
+    {
+      "id": "en-in-09",
+      "language": "en",
+      "answerable": true,
+      "question": "What happens if I set reasoning on a provider that doesn't support it?",
+      "file": "26-reasoning.mdx",
+      "heading": "Reasoning › Provider Support",
+      "evidence": "emit an `unsupported` warning and ignore the parameter"
+    },
+    {
+      "id": "en-in-10",
+      "language": "en",
+      "answerable": true,
+      "question": "How do I generate several images from one prompt?",
+      "file": "35-image-generation.mdx",
+      "heading": "Image Generation › Settings",
+      "evidence": "`generateImage` also supports generating multiple images at once"
+    },
+    {
+      "id": "en-in-11",
+      "language": "en",
+      "answerable": true,
+      "question": "How do I transcribe live audio while it is still being recorded?",
+      "file": "36-transcription.mdx",
+      "heading": "Transcription › Streaming Transcription",
+      "evidence": "Use `experimental_streamTranscribe` when you have live raw audio and need transcript updates before the full audio stream is complete."
+    },
+    {
+      "id": "en-in-12",
+      "language": "en",
+      "answerable": true,
+      "question": "How do I get notified when a generated video is ready?",
+      "file": "38-video-generation.mdx",
+      "heading": "Video Generation › Settings › Webhooks",
+      "evidence": "For models with native webhook support, pass a `webhook` factory that returns a public URL"
+    },
+    {
+      "id": "en-in-13",
+      "language": "en",
+      "answerable": true,
+      "question": "How do I apply default settings to every call of a language model?",
+      "file": "40-middleware.mdx",
+      "heading": "Language Model Middleware › Built-in Middleware",
+      "evidence": "The `defaultSettingsMiddleware` function can be used to apply default settings to a language model."
+    },
+    {
+      "id": "en-in-14",
+      "language": "en",
+      "answerable": true,
+      "question": "How do I turn off telemetry for a single call?",
+      "file": "60-telemetry.mdx",
+      "heading": "Telemetry › Enabling telemetry",
+      "evidence": "To disable telemetry for a specific call, set `isEnabled: false`"
+    },
+    {
+      "id": "en-in-15",
+      "language": "en",
+      "answerable": true,
+      "question": "Is it safe to run AI SDK DevTools in production?",
+      "file": "65-devtools.mdx",
+      "heading": "DevTools",
+      "evidence": "AI SDK DevTools is intended for local development only."
+    },
+    {
+      "id": "en-out-01",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I fine-tune a GPT model on my own dataset?",
+      "notInCorpus": ["fine-tun", "finetun"]
+    },
+    {
+      "id": "en-out-02",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I store embeddings in Postgres with pgvector?",
+      "notInCorpus": ["pgvector", "postgres"]
+    },
+    {
+      "id": "en-out-03",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I search my documents with a Pinecone index?",
+      "notInCorpus": ["pinecone"]
+    },
+    {
+      "id": "en-out-04",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I run Llama locally with Ollama?",
+      "notInCorpus": ["ollama"]
+    },
+    {
+      "id": "en-out-05",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I add memory to a LangChain agent?",
+      "notInCorpus": ["langchain"]
+    },
+    {
+      "id": "en-out-06",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I serve an open-source model on my own GPU with vLLM?",
+      "notInCorpus": ["vllm", "gpu"]
+    },
+    {
+      "id": "en-out-07",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I quantize a model to 4 bits to save memory?",
+      "notInCorpus": ["quantiz"]
+    },
+    {
+      "id": "en-out-08",
+      "language": "en",
+      "answerable": false,
+      "question": "How does RLHF reduce hallucinations?",
+      "notInCorpus": ["rlhf", "hallucinat"]
+    },
+    {
+      "id": "en-out-09",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I center a div with CSS grid?",
+      "notInCorpus": ["css grid"]
+    },
+    {
+      "id": "en-out-10",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I add sign-in with NextAuth to a Next.js app?",
+      "notInCorpus": ["nextauth"]
+    },
+    {
+      "id": "en-out-11",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I use Incremental Static Regeneration in Next.js?",
+      "notInCorpus": ["incremental static"]
+    },
+    {
+      "id": "en-out-12",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I optimize images with next/image?",
+      "notInCorpus": ["next/image"]
+    },
+    {
+      "id": "en-out-13",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I register a service worker for offline support?",
+      "notInCorpus": ["service worker"]
+    },
+    {
+      "id": "en-out-14",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I store a JWT in an HttpOnly cookie?",
+      "notInCorpus": ["jwt", "httponly"]
+    },
+    {
+      "id": "en-out-15",
+      "language": "en",
+      "answerable": false,
+      "question": "How do I deploy a Next.js app with Docker?",
+      "notInCorpus": ["docker"]
+    },
+    {
+      "id": "pt-in-01",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como registro os erros que acontecem durante o streaming de texto?",
+      "file": "05-generating-text.mdx",
+      "heading": "Generating Text › `streamText` › `onError` callback",
+      "evidence": "To log errors, you can provide an `onError` callback that is triggered when an error occurs."
+    },
+    {
+      "id": "pt-in-02",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como faço o modelo escolher um rótulo de uma lista fixa?",
+      "file": "10-generating-structured-data.mdx",
+      "heading": "Generating Structured Data › Output Types",
+      "evidence": "when you expect the model to choose from a specific set of string options"
+    },
+    {
+      "id": "pt-in-03",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como obrigo o modelo a chamar uma ferramenta específica?",
+      "file": "15-tools-and-tool-calling.mdx",
+      "heading": "Tool Calling › Tool Choice",
+      "evidence": "the model must call the specified tool"
+    },
+    {
+      "id": "pt-in-04",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Qual transporte devo usar para conectar a um servidor MCP em produção?",
+      "file": "16-mcp-tools.mdx",
+      "heading": "Model Context Protocol (MCP) › Initializing an MCP Client",
+      "evidence": "We recommend using HTTP transport (like `StreamableHTTPClientTransport`) for production deployments."
+    },
+    {
+      "id": "pt-in-05",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como passo uma chave de API para uma ferramenta sem colocá-la no prompt?",
+      "file": "17-runtime-and-tool-context.mdx",
+      "heading": "Runtime and Tool Context › Choosing the Right Context",
+      "evidence": "Use `toolsContext` and `contextSchema` for values needed by a specific tool, such as API keys"
+    },
+    {
+      "id": "pt-in-06",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Qual versão do Node.js o code mode exige?",
+      "file": "18-code-mode.mdx",
+      "heading": "Code Mode",
+      "evidence": "It requires Node.js 22 or newer and is not available in browser or edge runtimes."
+    },
+    {
+      "id": "pt-in-07",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Qual temperatura devo usar nas chamadas de ferramentas?",
+      "file": "20-prompt-engineering.mdx",
+      "heading": "Prompt Engineering › Tips",
+      "evidence": "For tool calls and object generation, it's recommended to use `temperature: 0`"
+    },
+    {
+      "id": "pt-in-08",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Por padrão, quantas vezes o AI SDK repete uma chamada que falhou?",
+      "file": "25-settings.mdx",
+      "heading": "Settings › Request Options",
+      "evidence": "Maximum number of retries. Set to 0 to disable retries. Default: `2`."
+    },
+    {
+      "id": "pt-in-09",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "O que acontece se eu usar reasoning com um provedor que não suporta?",
+      "file": "26-reasoning.mdx",
+      "heading": "Reasoning › Provider Support",
+      "evidence": "emit an `unsupported` warning and ignore the parameter"
+    },
+    {
+      "id": "pt-in-10",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como gero várias imagens a partir de um único prompt?",
+      "file": "35-image-generation.mdx",
+      "heading": "Image Generation › Settings",
+      "evidence": "`generateImage` also supports generating multiple images at once"
+    },
+    {
+      "id": "pt-in-11",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como transcrevo áudio ao vivo enquanto ele ainda está sendo gravado?",
+      "file": "36-transcription.mdx",
+      "heading": "Transcription › Streaming Transcription",
+      "evidence": "Use `experimental_streamTranscribe` when you have live raw audio and need transcript updates before the full audio stream is complete."
+    },
+    {
+      "id": "pt-in-12",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como fico sabendo quando um vídeo gerado está pronto?",
+      "file": "38-video-generation.mdx",
+      "heading": "Video Generation › Settings › Webhooks",
+      "evidence": "For models with native webhook support, pass a `webhook` factory that returns a public URL"
+    },
+    {
+      "id": "pt-in-13",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como aplico configurações padrão a todas as chamadas de um modelo de linguagem?",
+      "file": "40-middleware.mdx",
+      "heading": "Language Model Middleware › Built-in Middleware",
+      "evidence": "The `defaultSettingsMiddleware` function can be used to apply default settings to a language model."
+    },
+    {
+      "id": "pt-in-14",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "Como desativo a telemetria em uma única chamada?",
+      "file": "60-telemetry.mdx",
+      "heading": "Telemetry › Enabling telemetry",
+      "evidence": "To disable telemetry for a specific call, set `isEnabled: false`"
+    },
+    {
+      "id": "pt-in-15",
+      "language": "pt-BR",
+      "answerable": true,
+      "question": "É seguro usar o AI SDK DevTools em produção?",
+      "file": "65-devtools.mdx",
+      "heading": "DevTools",
+      "evidence": "AI SDK DevTools is intended for local development only."
+    },
+    {
+      "id": "pt-out-01",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como faço fine-tuning de um modelo GPT com os meus próprios dados?",
+      "notInCorpus": ["fine-tun", "finetun"]
+    },
+    {
+      "id": "pt-out-02",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como armazeno embeddings no Postgres com pgvector?",
+      "notInCorpus": ["pgvector", "postgres"]
+    },
+    {
+      "id": "pt-out-03",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como busco nos meus documentos com um índice do Pinecone?",
+      "notInCorpus": ["pinecone"]
+    },
+    {
+      "id": "pt-out-04",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como rodo o Llama localmente com o Ollama?",
+      "notInCorpus": ["ollama"]
+    },
+    {
+      "id": "pt-out-05",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como adiciono memória a um agente do LangChain?",
+      "notInCorpus": ["langchain"]
+    },
+    {
+      "id": "pt-out-06",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como sirvo um modelo open source na minha própria GPU com o vLLM?",
+      "notInCorpus": ["vllm", "gpu"]
+    },
+    {
+      "id": "pt-out-07",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como quantizo um modelo para 4 bits para economizar memória?",
+      "notInCorpus": ["quantiz"]
+    },
+    {
+      "id": "pt-out-08",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como o RLHF reduz alucinações?",
+      "notInCorpus": ["rlhf", "hallucinat"]
+    },
+    {
+      "id": "pt-out-09",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como centralizo uma div com CSS grid?",
+      "notInCorpus": ["css grid"]
+    },
+    {
+      "id": "pt-out-10",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como adiciono login com NextAuth a um app Next.js?",
+      "notInCorpus": ["nextauth"]
+    },
+    {
+      "id": "pt-out-11",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como uso Incremental Static Regeneration no Next.js?",
+      "notInCorpus": ["incremental static"]
+    },
+    {
+      "id": "pt-out-12",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como otimizo imagens com next/image?",
+      "notInCorpus": ["next/image"]
+    },
+    {
+      "id": "pt-out-13",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como registro um service worker para o site funcionar offline?",
+      "notInCorpus": ["service worker"]
+    },
+    {
+      "id": "pt-out-14",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como guardo um JWT em um cookie HttpOnly?",
+      "notInCorpus": ["jwt", "httponly"]
+    },
+    {
+      "id": "pt-out-15",
+      "language": "pt-BR",
+      "answerable": false,
+      "question": "Como faço deploy de um app Next.js com Docker?",
+      "notInCorpus": ["docker"]
+    }
+  ]
+}

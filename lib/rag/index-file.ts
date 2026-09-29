@@ -152,26 +152,21 @@ function toChunk({ id, file, heading, startLine, endLine, text }: IndexChunk): C
   return { id, file, heading, startLine, endLine, text };
 }
 
-/**
- * Applies the loading rules (spec §4.3, S-07). Mock mode ignores the stored vectors and model.
- * Real mode throws when the index is a mock-mode one, when a vector is missing, or when
- * REFUSAL_THRESHOLD is unset, so a production deploy before step 3 fails loudly.
- */
-export function loadIndex(
-  index: IndexFile,
-  { mock, threshold }: { mock: boolean; threshold: RefusalThreshold | null },
-): LoadedIndex {
-  if (mock) return { mock: true, chunks: index.chunks.map(toChunk) };
+/** A real-mode index's model and vectors. */
+export type IndexVectors = { model: string; dimensions: number; entries: IndexEntry[] };
 
+/**
+ * The loading rules on a real-mode index's vectors (spec §4.3, S-07): it throws when the index is
+ * a mock-mode one, when a vector is missing, or when a vector's length is not `dimensions`.
+ * scripts/calibrate.ts uses it alone, because it runs before REFUSAL_THRESHOLD exists (spec §8).
+ */
+export function loadVectors(index: IndexFile): IndexVectors {
   const { model, dimensions } = index;
   const rebuild = "Rebuild it with EMBEDDING_MODEL set: pnpm build-index (spec §4.2).";
   if (model === MOCK_MODEL || dimensions === null) {
     throw new Error(
       `${INDEX_PATH} is a mock-mode index (model "${model}", dimensions ${dimensions}). ${rebuild}`,
     );
-  }
-  if (threshold === null) {
-    throw new Error("REFUSAL_THRESHOLD is unset in lib/rag/config.ts; calibrate it (spec §8).");
   }
   const entries = index.chunks.map((chunk) => {
     if (chunk.vector === undefined) {
@@ -183,7 +178,25 @@ export function loadIndex(
     }
     return { chunk: toChunk(chunk), vector };
   });
-  return { mock: false, model, dimensions, threshold, entries };
+  return { model, dimensions, entries };
+}
+
+/**
+ * Applies the loading rules (spec §4.3, S-07). Mock mode ignores the stored vectors and model.
+ * Real mode applies loadVectors and throws when REFUSAL_THRESHOLD is unset, so a production
+ * deploy before step 3 fails loudly.
+ */
+export function loadIndex(
+  index: IndexFile,
+  { mock, threshold }: { mock: boolean; threshold: RefusalThreshold | null },
+): LoadedIndex {
+  if (mock) return { mock: true, chunks: index.chunks.map(toChunk) };
+
+  const vectors = loadVectors(index);
+  if (threshold === null) {
+    throw new Error("REFUSAL_THRESHOLD is unset in lib/rag/config.ts; calibrate it (spec §8).");
+  }
+  return { mock: false, ...vectors, threshold };
 }
 
 /** The last loading rule, applied at query time (spec §4.3): the route answers with its error. */

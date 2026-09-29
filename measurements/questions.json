@@ -1,0 +1,355 @@
+{
+  "about": "The measurement set of spec §11 (S-10, S-13, S-19): English questions, written and frozen before the first run. Forty are questions the AI SDK Core docs answer (inScope: true); each names the pinned passage that answers it (file and heading) and a phrase copied from it. Five are near-miss questions the docs do not cover (inScope: false), AI or web topics named by terms no corpus file contains; refusing them is the correct answer, and they measure refusal accuracy (S-10). It never overlaps calibration/questions.json (R-20) or the suggested prompts. Portuguese answers are checked by hand instead (S-13).",
+  "questions": [
+    {
+      "id": "m01",
+      "question": "How do I read the raw response headers from the provider after generateText?",
+      "inScope": true,
+      "file": "05-generating-text.mdx",
+      "heading": "Generating Text › `generateText`",
+      "evidence": "You can access the raw response headers and body using the `finalStep.response` property"
+    },
+    {
+      "id": "m02",
+      "question": "Which function should I use for a chatbot, generateText or streamText?",
+      "inScope": true,
+      "file": "01-overview.mdx",
+      "heading": "Overview › AI SDK Core Functions",
+      "evidence": "You can use the `streamText` function for interactive use cases such as"
+    },
+    {
+      "id": "m03",
+      "question": "How can I smooth out a choppy text stream?",
+      "inScope": true,
+      "file": "05-generating-text.mdx",
+      "heading": "Generating Text › `streamText` › Stream transformation",
+      "evidence": "can be used to smooth out text and reasoning streaming"
+    },
+    {
+      "id": "m04",
+      "question": "How do I access the web sources a model used for its answer?",
+      "inScope": true,
+      "file": "05-generating-text.mdx",
+      "heading": "Generating Text › Sources",
+      "evidence": "You can access them using the `sources` property of the result."
+    },
+    {
+      "id": "m05",
+      "question": "How do I get each array element as soon as the model finishes it?",
+      "inScope": true,
+      "file": "10-generating-structured-data.mdx",
+      "heading": "Generating Structured Data › Output Types",
+      "evidence": "you can use `elementStream` to receive each completed element as it is generated"
+    },
+    {
+      "id": "m06",
+      "question": "What error does generateText throw when the output doesn't match my schema?",
+      "inScope": true,
+      "file": "10-generating-structured-data.mdx",
+      "heading": "Generating Structured Data › Error Handling",
+      "evidence": "If the model response cannot be parsed or validated against the schema"
+    },
+    {
+      "id": "m07",
+      "question": "How do I tell the model what each field in my schema means?",
+      "inScope": true,
+      "file": "10-generating-structured-data.mdx",
+      "heading": "Generating Structured Data › Property Descriptions",
+      "evidence": "to individual schema properties to give the model hints about what each property is for"
+    },
+    {
+      "id": "m08",
+      "question": "How do I ask the user to approve a tool call before it runs?",
+      "inScope": true,
+      "file": "15-tools-and-tool-calling.mdx",
+      "heading": "Tool Calling › Tool Execution Approval",
+      "evidence": "`'user-approval'`: emit an approval request and wait for an explicit response"
+    },
+    {
+      "id": "m09",
+      "question": "How many steps does a tool loop run by default?",
+      "inScope": true,
+      "file": "15-tools-and-tool-calling.mdx",
+      "heading": "Tool Calling › Multi-Step Calls (using stopWhen)",
+      "evidence": "stops after a specified number of steps (default: `isStepCount(20)`)"
+    },
+    {
+      "id": "m10",
+      "question": "How can a tool stream status updates while it is still running?",
+      "inScope": true,
+      "file": "15-tools-and-tool-calling.mdx",
+      "heading": "Tool Calling › Preliminary Tool Results",
+      "evidence": "You can return an `AsyncIterable` over multiple results."
+    },
+    {
+      "id": "m11",
+      "question": "How do I define a tool whose schema is only known at runtime?",
+      "inScope": true,
+      "file": "15-tools-and-tool-calling.mdx",
+      "heading": "Tool Calling › Dynamic Tools",
+      "evidence": "AI SDK Core supports dynamic tools for scenarios where tool schemas are not known at compile time."
+    },
+    {
+      "id": "m12",
+      "question": "What timeout should I set for video generation?",
+      "inScope": true,
+      "file": "38-video-generation.mdx",
+      "heading": "Video Generation › Settings › Abort Signals and Timeouts",
+      "evidence": "Consider using longer timeouts (60 seconds or more) depending on the model and video length."
+    },
+    {
+      "id": "m13",
+      "question": "How do I tag telemetry with the name of the function that made the call?",
+      "inScope": true,
+      "file": "60-telemetry.mdx",
+      "heading": "Telemetry › Telemetry Metadata",
+      "evidence": "You can provide a `functionId` to identify the function that the telemetry data is for"
+    },
+    {
+      "id": "m14",
+      "question": "Which test helper returns a different value on each call?",
+      "inScope": true,
+      "file": "55-testing.mdx",
+      "heading": "Testing",
+      "evidence": "Iterates over an array of values with each call."
+    },
+    {
+      "id": "m15",
+      "question": "How can a tool send a screenshot back to the model?",
+      "inScope": true,
+      "file": "15-tools-and-tool-calling.mdx",
+      "heading": "Tool Calling › Multi-modal Tool Results",
+      "evidence": "AI SDK Core tools have an optional `toModelOutput` function"
+    },
+    {
+      "id": "m16",
+      "question": "How do I retry MCP tool calls that fail because of rate limits?",
+      "inScope": true,
+      "file": "16-mcp-tools.mdx",
+      "heading": "Model Context Protocol (MCP) › Initializing an MCP Client",
+      "evidence": "You can opt into automatic retries for `tools/call` requests by passing `maxRetries` when creating the client"
+    },
+    {
+      "id": "m17",
+      "question": "How can I tell if an MCP server changed a tool's definition after I approved it?",
+      "inScope": true,
+      "file": "16-mcp-tools.mdx",
+      "heading": "Model Context Protocol (MCP) › Detecting tool-definition drift (\"rug pull\")",
+      "evidence": "The AI SDK provides two functions to pin the approved definitions and detect changes."
+    },
+    {
+      "id": "m18",
+      "question": "How do I handle an MCP server that asks the user for more input during a tool call?",
+      "inScope": true,
+      "file": "16-mcp-tools.mdx",
+      "heading": "Model Context Protocol (MCP) › Handling Elicitation Requests",
+      "evidence": "Use the `onElicitationRequest` method to register a handler that will be called when the server requests input"
+    },
+    {
+      "id": "m19",
+      "question": "Where does an MCP App render its HTML?",
+      "inScope": true,
+      "file": "17-mcp-apps.mdx",
+      "heading": "MCP Apps",
+      "evidence": "tools can point to a `ui://` resource containing HTML that your app renders in a sandboxed iframe"
+    },
+    {
+      "id": "m20",
+      "question": "Is runtimeContext sent to the model as part of the prompt?",
+      "inScope": true,
+      "file": "17-runtime-and-tool-context.mdx",
+      "heading": "Runtime and Tool Context › Runtime Context",
+      "evidence": "It is not added to the model prompt automatically."
+    },
+    {
+      "id": "m21",
+      "question": "Can a code mode program call fetch or read files?",
+      "inScope": true,
+      "file": "18-code-mode.mdx",
+      "heading": "Code Mode › Isolation and Tool Access",
+      "evidence": "Network or system access must be implemented in a tool and explicitly provided to code mode."
+    },
+    {
+      "id": "m22",
+      "question": "How do I let the model discover tools on demand instead of sending all of them?",
+      "inScope": true,
+      "file": "19-tool-search.mdx",
+      "heading": "Tool Search",
+      "evidence": "Register tools with `deferLoading: true`; search matches their names and descriptions"
+    },
+    {
+      "id": "m23",
+      "question": "Should optional tool parameters use nullable or optional in Zod?",
+      "inScope": true,
+      "file": "20-prompt-engineering.mdx",
+      "heading": "Prompt Engineering › Tips",
+      "evidence": "optional parameters should use `.nullable()` instead of `.optional()`"
+    },
+    {
+      "id": "m24",
+      "question": "Should I set temperature and topP at the same time?",
+      "inScope": true,
+      "file": "25-settings.mdx",
+      "heading": "Settings › Language Model Call Options",
+      "evidence": "It is recommended to set either `temperature` or `topP`, but not both."
+    },
+    {
+      "id": "m25",
+      "question": "How do I abort a stream that stalls after it has started?",
+      "inScope": true,
+      "file": "25-settings.mdx",
+      "heading": "Settings › Request Options",
+      "evidence": "This is useful for detecting streams that stall after generation begins."
+    },
+    {
+      "id": "m26",
+      "question": "If I set both reasoning and reasoning options in providerOptions, which one wins?",
+      "inScope": true,
+      "file": "26-reasoning.mdx",
+      "heading": "Reasoning › Precedence Rules",
+      "evidence": "If you set reasoning-related options in `providerOptions`, they take full precedence and the top-level `reasoning` parameter is ignored."
+    },
+    {
+      "id": "m27",
+      "question": "How do I see how many tokens an embedding call used?",
+      "inScope": true,
+      "file": "30-embeddings.mdx",
+      "heading": "Embeddings › Token Usage",
+      "evidence": "Both `embed` and `embedMany` provide token usage information in the `usage` property of the result object"
+    },
+    {
+      "id": "m28",
+      "question": "How do I keep only the most relevant documents after reranking?",
+      "inScope": true,
+      "file": "31-reranking.mdx",
+      "heading": "Reranking › Settings",
+      "evidence": "Use `topN` to limit the number of results returned."
+    },
+    {
+      "id": "m29",
+      "question": "Does a boolean evaluation probability tell me how confident the model is?",
+      "inScope": true,
+      "file": "32-evaluation.mdx",
+      "heading": "Evaluation › Probabilities and confidence",
+      "evidence": "`0.98` means a strong yes and `0.02` means a strong no. It is not confidence in either outcome."
+    },
+    {
+      "id": "m30",
+      "question": "How do I get the images a language model like Gemini generates?",
+      "inScope": true,
+      "file": "35-image-generation.mdx",
+      "heading": "Image Generation › Generating Images with Language Models",
+      "evidence": "you can access the generated images using the `files` property of the response"
+    },
+    {
+      "id": "m31",
+      "question": "Where should the token for a realtime session be created?",
+      "inScope": true,
+      "file": "36-realtime.mdx",
+      "heading": "Realtime",
+      "evidence": "Your server creates a short-lived realtime token with `experimental_realtime.getToken()`."
+    },
+    {
+      "id": "m32",
+      "question": "What happens if I don't set a source language for speech translation?",
+      "inScope": true,
+      "file": "36-translation.mdx",
+      "heading": "Translation",
+      "evidence": "When `sourceLanguage` is absent, providers auto-detect the source language."
+    },
+    {
+      "id": "m33",
+      "question": "How do I turn text into spoken audio?",
+      "inScope": true,
+      "file": "37-speech.mdx",
+      "heading": "Speech",
+      "evidence": "function to generate speech from text using a speech model."
+    },
+    {
+      "id": "m34",
+      "question": "How do I use one uploaded file with both OpenAI and Anthropic?",
+      "inScope": true,
+      "file": "39-file-uploads.mdx",
+      "heading": "File Uploads › Multi-Provider Usage",
+      "evidence": "you need to upload the file to both providers and merge the references"
+    },
+    {
+      "id": "m35",
+      "question": "In what order are multiple middlewares applied?",
+      "inScope": true,
+      "file": "40-middleware.mdx",
+      "heading": "Language Model Middleware › Multiple middlewares",
+      "evidence": "The middlewares will be applied in the order they are provided."
+    },
+    {
+      "id": "m36",
+      "question": "How do I upload a custom skill to a provider?",
+      "inScope": true,
+      "file": "41-skill-uploads.mdx",
+      "heading": "Skill Uploads",
+      "evidence": "function to upload custom skills to a provider and get back a `ProviderReference`"
+    },
+    {
+      "id": "m37",
+      "question": "Do batch results come back in the same order as my requests?",
+      "inScope": true,
+      "file": "42-batch.mdx",
+      "heading": "Batch › Starting a batch",
+      "evidence": "Results are not guaranteed to arrive in input order"
+    },
+    {
+      "id": "m38",
+      "question": "Which provider does a plain model ID string use by default?",
+      "inScope": true,
+      "file": "45-provider-management.mdx",
+      "heading": "Provider & Model Management › Global Provider Configuration",
+      "evidence": "By default, the global provider is set to the Vercel AI Gateway."
+    },
+    {
+      "id": "m39",
+      "question": "Which callback runs when the user stops a stream?",
+      "inScope": true,
+      "file": "50-error-handling.mdx",
+      "heading": "Error Handling › Handling stream aborts",
+      "evidence": "Use the `onAbort` callback to handle these cases."
+    },
+    {
+      "id": "m40",
+      "question": "What happens if one of my lifecycle callbacks throws?",
+      "inScope": true,
+      "file": "65-lifecycle-callbacks.mdx",
+      "heading": "Lifecycle Callbacks › Basic Usage",
+      "evidence": "If a callback throws, the error is caught internally and the AI SDK call continues."
+    },
+    {
+      "id": "m41",
+      "question": "How do I load and split my PDFs with LlamaIndex?",
+      "inScope": false,
+      "notInCorpus": ["llamaindex"]
+    },
+    {
+      "id": "m42",
+      "question": "How do I keep my embeddings in a Qdrant collection?",
+      "inScope": false,
+      "notInCorpus": ["qdrant"]
+    },
+    {
+      "id": "m43",
+      "question": "How do I score the faithfulness of my RAG answers with RAGAS?",
+      "inScope": false,
+      "notInCorpus": ["ragas"]
+    },
+    {
+      "id": "m44",
+      "question": "How do I run a Stable Diffusion model in the browser with ONNX?",
+      "inScope": false,
+      "notInCorpus": ["stable diffusion", "onnx"]
+    },
+    {
+      "id": "m45",
+      "question": "How do I set up a GraphQL API with Apollo Server?",
+      "inScope": false,
+      "notInCorpus": ["graphql", "apollo"]
+    }
+  ]
+}

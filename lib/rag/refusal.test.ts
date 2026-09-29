@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isRefusalText } from "./refusal";
+import { isRefusalText, thresholdFor } from "./refusal";
 
 // The refusal sentences, verbatim from spec §7.1 (R-17).
 const EN = "I don't know. The AI SDK Core docs I search don't cover that.";
@@ -23,5 +23,19 @@ describe("isRefusalText", () => {
     ["an answer that mixes both languages", `${EN} ${PT}`],
   ])("rejects %s", (_, answer) => {
     expect(isRefusalText(answer)).toBe(false);
+  });
+});
+
+// The gate's threshold under each interface language (spec §8 rule 3, R-18).
+describe("thresholdFor", () => {
+  it("applies one threshold to both languages", () => {
+    expect(thresholdFor(0.4, "en")).toBe(0.4);
+    expect(thresholdFor(0.4, "pt-BR")).toBe(0.4);
+  });
+
+  it("picks the interface language's own threshold when they are keyed by language", () => {
+    const threshold = { en: 0.45, "pt-BR": 0.38 };
+    expect(thresholdFor(threshold, "en")).toBe(0.45);
+    expect(thresholdFor(threshold, "pt-BR")).toBe(0.38);
   });
 });

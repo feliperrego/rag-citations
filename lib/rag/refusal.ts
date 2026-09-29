@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/i18n/locale";
 import { messages } from "@/lib/i18n/messages";
+import type { RefusalThreshold } from "./config";
 import { normalise } from "./verify";
 
 /**
@@ -19,4 +20,12 @@ const NORMALISED_REFUSALS = new Set(Object.values(REFUSAL_SENTENCES).map(normali
  */
 export function isRefusalText(answer: string): boolean {
   return NORMALISED_REFUSALS.has(normalise(answer));
+}
+
+/**
+ * The threshold the gate applies under an interface language: the one threshold, or that
+ * language's own when the calibration keyed them by language (spec §8 rule 3, R-18).
+ */
+export function thresholdFor(threshold: RefusalThreshold, locale: Locale): number {
+  return typeof threshold === "number" ? threshold : threshold[locale];
 }

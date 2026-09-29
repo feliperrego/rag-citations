@@ -16,7 +16,8 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "fetch-corpus": "tsx scripts/fetch-corpus.ts",
-    "build-index": "tsx scripts/build-index.ts"
+    "build-index": "tsx scripts/build-index.ts",
+    "calibrate": "tsx scripts/calibrate.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",

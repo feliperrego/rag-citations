@@ -10,6 +10,7 @@ import {
   encodeVector,
   type IndexFile,
   loadIndex,
+  loadVectors,
   resolveEmbeddingModel,
   serializeIndex,
 } from "./index-file";
@@ -246,6 +247,27 @@ describe("loadIndex", () => {
     expect(() => loadIndex(indexFile({ dimensions: 4 }), { mock: false, threshold: 0.4 })).toThrow(
       /a has 3 dimensions; the index has 4/,
     );
+  });
+});
+
+// The vector rules alone, for scripts/calibrate.ts, which runs before a threshold exists (spec §8).
+describe("loadVectors", () => {
+  it("returns the model, dimensions and each chunk's vector, with no threshold", () => {
+    expect(loadVectors(indexFile())).toStrictEqual({
+      model: MODEL,
+      dimensions: 3,
+      entries: [
+        { chunk: ALPHA, vector: [1, -2, 0.5] },
+        { chunk: BETA, vector: [0, 0.5, -2] },
+      ],
+    });
+  });
+
+  it("throws on a mock-mode index and on a missing vector", () => {
+    expect(() => loadVectors(indexFile({ model: "mock" }))).toThrow(/is a mock-mode index/);
+    const index = indexFile();
+    delete index.chunks[0].vector;
+    expect(() => loadVectors(index)).toThrow(/no vector for a/);
   });
 });
 
