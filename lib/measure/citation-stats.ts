@@ -301,8 +301,8 @@ export function summarizeAnswers(answers: readonly AnswerRecord[]): CitationSumm
 }
 
 /** " (m03, m17)" for the failures of one kind, or nothing when there are none. */
-function ids(failures: readonly Failure[]): string {
-  return failures.length === 0 ? "" : ` (${failures.map(({ id }) => id).join(", ")})`;
+function ids(failures: readonly Failure[], label = ""): string {
+  return failures.length === 0 ? "" : ` (${label}${failures.map(({ id }) => id).join(", ")})`;
 }
 
 /** A search time to two significant digits, e.g. 0.31. */
@@ -329,8 +329,11 @@ export function readmeLines(
   // An in-scope failure is named under its classification, an out-of-scope one under refusal
   // accuracy, and any answer with unverified quotes under those.
   const failed = (classification: Classification) =>
-    summary.failures.filter(
-      (failure) => failure.inScope && failure.classification === classification,
+    ids(
+      summary.failures.filter(
+        (failure) => failure.inScope && failure.classification === classification,
+      ),
+      "in scope: ",
     );
   const notRefused = summary.failures.filter((failure) => !failure.inScope);
   const unverified = summary.failures.filter(({ unverified }) => unverified.length > 0);
@@ -346,16 +349,17 @@ export function readmeLines(
     `(${outOfScope.questions} out of scope), ${model}, measured from ${location}, ${span}, ` +
     `${runs.length} runs; answers: with citations ${kinds["answered-with-citations"]}, ` +
     `without citations ${kinds["answered-without-citations"]}` +
-    `${ids(failed("answered-without-citations"))}, gate refusal ${kinds["gate-refusal"]}` +
-    `${ids(failed("gate-refusal"))}, model refusal ${kinds["model-refusal"]}` +
-    `${ids(failed("model-refusal"))}; refusal accuracy: ${outOfScope.refused} of ` +
+    `${failed("answered-without-citations")}, gate refusal ${kinds["gate-refusal"]}` +
+    `${failed("gate-refusal")}, model refusal ${kinds["model-refusal"]}` +
+    `${failed("model-refusal")}; refusal accuracy: ${outOfScope.refused} of ` +
     `${outOfScope.questions} out-of-scope refused (gate ${outOfScope.gate}, model ` +
     `${outOfScope.model})${answered}; in-scope refused: ${inScope.refused} of ` +
     `${inScope.questions}; citations not verified: ` +
     `not found ${summary.statuses["not-found"]}, unknown source ` +
     `${summary.statuses["unknown-source"]}, malformed ${summary.statuses.malformed}` +
     `${ids(unverified)}. A verified quote is in its passage word for word, allowing only ` +
-    "whitespace, quote style, Unicode form, letter case and a Markdown link written as its text; " +
+    "whitespace, quote and dash style, Unicode form, letter case and a Markdown link written as " +
+    "its text; " +
     `it does not prove that the passage supports the claim · [raw data](${rawData})`;
   const decision =
     "- **The index is committed to the repo and searched in memory** instead of a vector " +

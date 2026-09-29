@@ -363,15 +363,16 @@ describe("readmeLines", () => {
     );
   });
 
-  it("prints How it's measured: counts, failures, refusal accuracy and the verbatim caveat (S-10, S-11, A-14)", () => {
+  it("prints How it's measured: counts, in-scope failures, refusal accuracy and the verbatim caveat (S-10, S-11, A-14)", () => {
     expect(lines.howMeasured).toBe(
       "n=112 citations in 38 answers to 45 English questions (5 out of scope), openai/gpt-6-luna, " +
         "measured from Recife, home fibre, 2026-10-05 to 2026-10-06, 3 runs; answers: with " +
-        "citations 38, without citations 1 (m38), gate refusal 4 (m39), model refusal 2 (m40); " +
+        "citations 38, without citations 1 (in scope: m38), gate refusal 4 (in scope: m39), " +
+        "model refusal 2 (in scope: m40); " +
         "refusal accuracy: 4 of 5 out-of-scope refused (gate 3, model 1), answered m44; " +
         "in-scope refused: 2 of 40; citations not verified: not found 1, unknown source 0, " +
         "malformed 1 (m37). A verified quote is in its " +
-        "passage word for word, allowing only whitespace, quote style, Unicode form, letter case " +
+        "passage word for word, allowing only whitespace, quote and dash style, Unicode form, letter case " +
         "and a Markdown link written as its text; it does not prove that the passage supports " +
         "the claim · " +
         "[raw data](measurements/citations-2026-10-06.json)",

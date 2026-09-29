@@ -23,7 +23,7 @@ const PENDING: ReadmeLines = {
     "classification, the refusal accuracy, the unverified citations by status with their " +
     "answers' ids, the model, the location, the days and a link to the raw data. A verified " +
     "quote is in its passage " +
-    "word for word, allowing only whitespace, quote style, Unicode form, letter case and a " +
+    "word for word, allowing only whitespace, quote and dash style, Unicode form, letter case and a " +
     "Markdown link written as its text; it does not prove that the passage supports the claim.",
   decision:
     "- **The index is committed to the repo and searched in memory** instead of a vector " +

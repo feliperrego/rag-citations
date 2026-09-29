@@ -171,7 +171,7 @@ taken from the AI SDK Core documentation at version 7.0.114.
   - `unknown-source`: `n` is outside 1–5;
   - `malformed`: a citation attempt that is not a well-formed marker. It counts in the denominator.
 - **One code path** [D: R-14]: the same result draws the badge on screen and sets `data-citation-verified="true|false"` on each inline `[n]` button, and only there, one per attempt. The measurement script reads it, as #1's script read `data-ttft-ms` [F: #1 spec §5.2, §5.4].
-- A verified quote proves the words are in the passage, not that the passage supports the claim [F: brief, Gao et al. 2023]. The README states this caveat, and says what "verbatim" allows: whitespace, quote style, Unicode form, letter case and a Markdown link written as its text [D: S-11, A-14].
+- A verified quote proves the words are in the passage, not that the passage supports the claim [F: brief, Gao et al. 2023]. The README states this caveat, and says what "verbatim" allows: whitespace, quote and dash style, Unicode form, letter case and a Markdown link written as its text [D: S-11, A-14; "dash" added 2026-09-29, wrap-up P2].
 
 ## 7. The interface
 
@@ -369,6 +369,9 @@ To be recorded, dated, as the rollout steps happen.
   - The 11 unverified citations are all `not-found`. By script over their quotes: 4 carry a backslash escape the model wrote inside the marker, `\"` in m07 and `\n` three times in m34 (the D2 class); 2 have fewer than 3 words (m30, m31). The other 5, by my reading [P]: the model edited or joined the text. m13 dropped a comma, m17 a `//`, m31 joined two list items, m36 two table rows, and m33 dropped a link's backticks along with its syntax, which A-14 keeps.
   - S-14: `pnpm count-code-answers` counts 0 of 32 answers with code-like text outside backticks, so the trigger did not fire, and none of the 32 answers has a fenced block [F: script]. Answers stay plain text [D: R-10]. The fenced blocks of the production checks came from 2 answers outside the measurement.
   - For #3: the escape class covers `\n` as well as `\"`, 4 of the 11 unverified citations. Felipe's D2 answer covered `\"`, the only escape seen after run 1; reading `\n` as a line break too is my proposal [P], because the `\n` cases appeared in run 3. The ROADMAP candidate says so.
+- **Wrap-up review** [F: an independent review of the README, §16, §18 and the ROADMAP entry, each finding checked by a skeptic]. It confirmed 14 findings; the doc and code fixes are in `fe5df57` and `778e394`, each with a note of what the line said before. Two changed README text, and Felipe approved both on 2026-09-29 ("todas ok") [D]:
+  - **P1.** The ids in brackets after each answer classification name in-scope answers only, and the line now says so: "gate refusal 10 (in scope: m03, …)". Before, 10 gate refusals showed 5 ids, because the 5 correct out-of-scope refusals are counted under refusal accuracy, not listed.
+  - **P2.** The caveat names dash style: "allowing only whitespace, quote and dash style, …". The normalisation always folded dashes (§6.3); the README left them out.
 
 ## 17. Proposals and answers
 
@@ -385,7 +388,7 @@ All items below were approved on 2026-09-28 ("todas ok"); X-01 took option (a).
 | S-04 | The success criteria as written | 1 |
 | S-09 | The gate refuses in the interface language; the model refuses in the question's language | 8 |
 | S-10 | Refusal accuracy is supporting data, never a second headline | 11 |
-| S-11 | "Verbatim" allows whitespace, quote style, Unicode form and letter case, and the README says so (A-14 later added link syntax) | 6.3 |
+| S-11 | "Verbatim" allows whitespace, quote style, Unicode form and letter case, and the README says so (A-14 later added link syntax; wrap-up P2 named dash style, which the normalisation always folded) | 6.3 |
 | S-12 | Malformed citations and unfinished markers count as unverified, in the denominator; answers without citations are listed as failures | 6.2, 6.3, 11 |
 | S-13 | The measurement set is English only; Portuguese is checked by hand, and the README says so | 11 |
 | S-20 | The interval is a seeded bootstrap over questions, not Wilson over citations | 11 |
