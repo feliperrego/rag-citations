@@ -342,6 +342,23 @@ To be recorded, dated, as the rollout steps happen.
   - All 8 suggested prompts land on the right side (S-28). Exit code 0.
 - **Checks after freezing.** Lint, typecheck and 751 unit tests pass. A real-mode `next build` passes and lists `○ /`. The mock e2e passes 82/82.
 
+### Deploy and production checks (2026-09-29) [F]
+
+- **Deploy.** Pushing `a6143a3` ran the first production deploy, which is Ready at https://rag-citations-five.vercel.app. CI passed.
+  - `/api/health` returns `{"ok":true,"model":"openai/gpt-6-luna","mock":false,"rateLimit":"upstash"}`.
+  - The page serves `data-commit` `a6143a3`, statically, in English.
+  - A `text/plain` POST gets a 415.
+- **README.** The live-demo link was filled in (plan Task 16, step 2).
+- **Checks in Chrome**, with Felipe's OK: five requests, four of them model calls.
+  1. **"How do I embed many values in parallel?"** (EN). The answer carries 2 citations, `[5]` and `[1]`, both `data-citation-verified="true"`. The Sources list shows "1 of 1 quotes verified" for each. The answer also contains a fenced code block, against rule 4 of §6.1. It renders as plain text, but it counts toward S-14's trigger.
+  2. **"Como gerar embeddings de vários textos em paralelo?"** (PT interface, `lang=pt-BR`). The answer is in Portuguese with English quotes (R-12). It carries 2 citations to `[1]`, one verified and one not found. The unverified quote dropped the Markdown link syntax the passage has: the passage has `` [`embedMany`](/docs/reference/ai-sdk-core/embed-many) ``, and the quote has only `` `embedMany` ``. Under S-11, Markdown syntax is compared as it is, so this counts as not found. The model also wrote a code block here.
+  3. **"View source on GitHub"** opens `30-embeddings.mdx?plain=1#L27-L50` in GitHub's code view, with lines 27–50 selected.
+  4. **"How do I enable dark mode in Tailwind CSS?"** (EN). The fixed English refusal, with `data-refusal="gate"`, no Sources list and no citations.
+  5. **"How do I store embeddings in Postgres with pgvector?"**, the calibration case that passes the EN gate (0.4668 ≥ 0.4421). The model gave the exact refusal sentence, with `data-refusal="model"` and no citations.
+- **Two findings for Felipe, before the measurement:**
+  - (a) The model writes fenced code blocks, in 2 of 2 answers, despite the instructions. S-14's trigger will likely fire.
+  - (b) The model drops Markdown link syntax inside quotes, which S-11 counts against the rate.
+
 ## 17. Proposals and answers
 
 All items below were approved on 2026-09-28 ("todas ok"); X-01 took option (a).
