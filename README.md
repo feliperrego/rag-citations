@@ -1,6 +1,6 @@
 # RAG with Citations — citation verification rate: pending the first production measurement
 
-[![CI](https://github.com/feliperrego/rag-citations/actions/workflows/ci.yml/badge.svg)](https://github.com/feliperrego/rag-citations/actions/workflows/ci.yml) · **[Live demo](<demo URL>)** · Part of the [feliperrego.com](https://feliperrego.com) portfolio
+[![CI](https://github.com/feliperrego/rag-citations/actions/workflows/ci.yml/badge.svg)](https://github.com/feliperrego/rag-citations/actions/workflows/ci.yml) · **[Live demo](https://rag-citations-five.vercel.app)** · Part of the [feliperrego.com](https://feliperrego.com) portfolio
 
 ## Problem
 An answer generated from documents can cite a source that does not say what it claims, and the reader rarely has a quick way to check. This demo answers questions about the Vercel AI SDK only from its AI SDK Core docs, pinned to the SDK version the app runs. The model must cite a passage after each claim, with a quote copied from it; the screen checks every quote against its passage and links to the exact lines on GitHub, and a question the docs do not cover gets "I don't know".
