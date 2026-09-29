@@ -37,7 +37,14 @@ export default defineConfig({
             // part of the next run's quota.
             retries: 0,
             workers: 1,
-            use: { ...devices["Desktop Chrome"], baseURL: MEASURE_URL },
+            // The test timeout covers the whole run, so each step needs its own limit: a stall
+            // must fail one question, whose abort writes the .aborted.json (spec §11).
+            use: {
+              ...devices["Desktop Chrome"],
+              baseURL: MEASURE_URL,
+              actionTimeout: 30_000,
+              navigationTimeout: 30_000,
+            },
           },
         ]
       : []),

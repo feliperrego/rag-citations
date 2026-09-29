@@ -1,4 +1,4 @@
-import type { UIMessage } from "ai";
+import type { LanguageModelUsage, UIMessage } from "ai";
 import { sourceUrl } from "./github";
 import type { SearchResult } from "./vector-store";
 
@@ -18,6 +18,9 @@ export type Source = {
   score: number;
 };
 
+/** The tokens of the answer's model call; a count the provider did not report is left out. */
+export type AnswerUsage = { inputTokens?: number; outputTokens?: number; totalTokens?: number };
+
 /** The assistant message's metadata (spec §5 steps 6–7, S-08, S-24). */
 export type RagMetadata = {
   /** Present only when the gate refused. */
@@ -27,6 +30,8 @@ export type RagMetadata = {
   threshold: number;
   /** The in-memory search alone, in milliseconds. */
   searchMs: number;
+  /** Sent with the answer's finish chunk, for the measurement (spec §11); a gate refusal has none. */
+  usage?: AnswerUsage;
 };
 
 export type RagDataTypes = { sources: Source[] };
@@ -46,6 +51,11 @@ export function toSources(results: readonly SearchResult[]): Source[] {
     url: sourceUrl(chunk),
     score,
   }));
+}
+
+/** The three totals of a model call's usage, the part the measurement records (spec §11). */
+export function answerUsage({ inputTokens, outputTokens, totalTokens }: LanguageModelUsage) {
+  return { inputTokens, outputTokens, totalTokens } satisfies AnswerUsage;
 }
 
 const NO_SOURCES: readonly Source[] = [];

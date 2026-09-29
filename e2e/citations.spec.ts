@@ -13,6 +13,7 @@ import { parseAnswer, parseCodeSpans } from "@/lib/rag/citations";
 import type { Source } from "@/lib/rag/message";
 import { normalise } from "@/lib/rag/verify";
 import { parseSse, type SseChunk, textDeltas } from "@/tests/helpers/sse";
+import { captureChatReply } from "./helpers/chat-reply";
 
 // E2E for the citation interface (spec §7, §10): the production build in mock mode (AI_MOCK=1),
 // zero cost. The mock model copies its quotes from the passages the route sent, so the page runs
@@ -62,26 +63,9 @@ function sourcesOf(chunks: readonly SseChunk[]): Source[] {
   return (chunks.find((chunk) => chunk.type === "data-sources")?.data ?? []) as Source[];
 }
 
-/**
- * Runs `send` and returns what the route sent, once the page has finished the answer. The reply
- * passes through page.route, whose fetch gives its exact bytes: Response.body() of the streamed
- * reply, which has no charset, came back decoded as Windows-1252 ("›" as "â€º"). The page then
- * gets the reply whole, so a test that watches the stream does without this.
- */
+/** Runs `send` and returns what the route sent, once the page has finished the answer. */
 async function ask(page: Page, send: () => Promise<void>): Promise<Exchange> {
-  const received = Promise.withResolvers<string>();
-  await page.route(
-    "**/api/chat",
-    async (route) => {
-      const response = await route.fetch();
-      const raw = (await response.body()).toString("utf8");
-      await route.fulfill({ response });
-      received.resolve(raw);
-    },
-    { times: 1 },
-  );
-  await send();
-  const raw = await received.promise;
+  const { body: raw } = await captureChatReply(page, send);
   // The page has been busy since the send, so Send is back once it has read the last chunk.
   await expect(sendButton(page)).toBeVisible({ timeout: 20_000 });
   const sse = parseSse(raw);

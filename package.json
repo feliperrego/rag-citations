@@ -17,7 +17,9 @@
     "e2e": "playwright test",
     "fetch-corpus": "tsx scripts/fetch-corpus.ts",
     "build-index": "tsx scripts/build-index.ts",
-    "calibrate": "tsx scripts/calibrate.ts"
+    "calibrate": "tsx scripts/calibrate.ts",
+    "aggregate-citations": "tsx scripts/aggregate-citations.ts",
+    "count-code-answers": "tsx scripts/count-code-answers.ts"
   },
   "dependencies": {
     "@ai-sdk/react": "4.0.117",

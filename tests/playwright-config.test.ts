@@ -32,14 +32,19 @@ describe("playwright.config.ts", () => {
     });
   });
 
-  it("adds a measure project on MEASURE_URL: no retries, one worker, no local server", async () => {
+  it("adds a measure project on MEASURE_URL: no retries, one worker, step limits, no local server", async () => {
     const config = await loadConfig({ MEASURE_URL: "https://demo.example.com" });
     const measure = config.projects?.find((project) => project.name === "measure");
 
     expect(measure).toMatchObject({
       retries: 0,
       workers: 1,
-      use: { baseURL: "https://demo.example.com" },
+      // Every action and page load has its own limit, under the run's long test timeout.
+      use: {
+        baseURL: "https://demo.example.com",
+        actionTimeout: 30_000,
+        navigationTimeout: 30_000,
+      },
     });
     const testMatch = measure?.testMatch as RegExp;
     expect(testMatch.test("e2e/ttft.measure.ts")).toBe(true);

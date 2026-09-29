@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { LOCALES } from "@/lib/i18n/locale";
 import { messages } from "@/lib/i18n/messages";
+import { MEASUREMENT_SET_PATH, type MeasurementSet } from "@/lib/measure/citation-runs";
 import {
   CALIBRATION_PATH,
   type CalibrationQuestion,
@@ -21,19 +22,7 @@ const calibration = JSON.parse(readFileSync(CALIBRATION_PATH, "utf8")) as Calibr
 const answerable = calibration.questions.filter((q) => q.answerable);
 const outOfScope = calibration.questions.filter((q) => !q.answerable);
 
-/**
- * The measurement set of spec §11: English questions (S-13), most of them answered by the docs,
- * plus near-misses the docs do not cover, which measure refusal accuracy (S-10).
- */
-type MeasurementSet = {
-  about: string;
-  questions: ({ id: string; question: string } & (
-    ({ inScope: true } & QuestionSource) | { inScope: false; notInCorpus: string[] }
-  ))[];
-};
-
-const MEASUREMENT_PATH = "measurements/questions.json";
-const measurement = JSON.parse(readFileSync(MEASUREMENT_PATH, "utf8")) as MeasurementSet;
+const measurement = JSON.parse(readFileSync(MEASUREMENT_SET_PATH, "utf8")) as MeasurementSet;
 const prompts = LOCALES.flatMap((locale) => messages[locale].prompts);
 
 /** A question compared as quotes are (S-11), with punctuation dropped. */
@@ -118,7 +107,7 @@ describe(CALIBRATION_PATH, () => {
 });
 
 // The measurement set of spec §11, frozen before the first run (S-10, S-13, S-19).
-describe(MEASUREMENT_PATH, () => {
+describe(MEASUREMENT_SET_PATH, () => {
   const inScopeQuestions = measurement.questions.filter((q) => q.inScope);
   const outOfScopeQuestions = measurement.questions.filter((q) => !q.inScope);
 

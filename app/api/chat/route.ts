@@ -13,7 +13,7 @@ import { guardModelRoute } from "@/lib/http";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/lib/i18n/locale";
 import { REFUSAL_THRESHOLD } from "@/lib/rag/config";
 import { loadIndex, readIndexFile } from "@/lib/rag/index-file";
-import { type RagUIMessage, toSources } from "@/lib/rag/message";
+import { answerUsage, type RagUIMessage, toSources } from "@/lib/rag/message";
 import { buildInstructions } from "@/lib/rag/prompt";
 import { REFUSAL_SENTENCES, thresholdFor } from "@/lib/rag/refusal";
 import { createRetriever } from "@/lib/rag/retrieve";
@@ -98,10 +98,8 @@ export async function POST(req: Request): Promise<Response> {
       }
 
       // 7. The passages travel as a data part before the answer (spec §5 step 7).
-      writer.write({
-        type: "message-metadata",
-        messageMetadata: { topScore, threshold, searchMs },
-      });
+      const retrieval = { topScore, threshold, searchMs };
+      writer.write({ type: "message-metadata", messageMetadata: retrieval });
       const sources = toSources(results);
       writer.write({ type: "data-sources", data: sources });
 
@@ -124,6 +122,11 @@ export async function POST(req: Request): Promise<Response> {
           sendStart: false,
           sendReasoning: false,
           onError: toSafeErrorMessage,
+          // The answer's token usage rides on its finish chunk, for the measurement (spec §11).
+          messageMetadata: ({ part }) =>
+            part.type === "finish"
+              ? { ...retrieval, usage: answerUsage(part.totalUsage) }
+              : undefined,
         }),
       );
     },

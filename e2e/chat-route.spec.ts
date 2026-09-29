@@ -30,7 +30,12 @@ test("an in-scope question gets its passages, then an answer whose quotes verify
   expect(res.status()).toBe(200);
   const sse = parseSse(await res.text());
   expect(chunkTypes(sse).slice(0, 3)).toEqual(["start", "message-metadata", "data-sources"]);
-  expect(sse.chunks.at(-1)).toEqual({ type: "finish", finishReason: "stop" });
+  // The finish chunk carries the answer's token usage, which the measurement records (spec §11).
+  expect(sse.chunks.at(-1)).toMatchObject({
+    type: "finish",
+    finishReason: "stop",
+    messageMetadata: { usage: { inputTokens: 0, outputTokens: expect.any(Number) } },
+  });
 
   const passages = (sse.chunks[2].data as Source[]).map(({ text }) => text);
   expect(passages).toHaveLength(5);

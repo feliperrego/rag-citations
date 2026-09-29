@@ -183,8 +183,27 @@ describe("POST /api/chat — an answer", () => {
       "finish",
     ]);
     expect(textDeltas(sse)).toEqual(["Hello ", "world"]);
-    expect(sse.chunks.at(-1)).toEqual({ type: "finish", finishReason: "stop" });
+    expect(sse.chunks.at(-1)).toMatchObject({ type: "finish", finishReason: "stop" });
     expect(h.rateLimitCalls).toEqual([req]);
+  });
+
+  it("sends the answer's token usage with its finish chunk, for the measurement (spec §11)", async () => {
+    // The mock reports no input tokens and one output token per chunk.
+    h.model = fastModel(["Hello ", "world"]);
+
+    const sse = await send(chatRequest(user(IN_SCOPE)));
+
+    const [retrieval] = h.retrievals;
+    expect(sse.chunks.at(-1)).toEqual({
+      type: "finish",
+      finishReason: "stop",
+      messageMetadata: {
+        topScore: retrieval.topScore,
+        threshold: MOCK_REFUSAL_THRESHOLD,
+        searchMs: retrieval.searchMs,
+        usage: { inputTokens: 0, outputTokens: 2, totalTokens: 2 },
+      },
+    });
   });
 
   it("sends the top score, threshold and search time, and the five passages (S-08)", async () => {
