@@ -358,6 +358,8 @@ To be recorded, dated, as the rollout steps happen.
 - **Two findings for Felipe, before the measurement:**
   - (a) The model writes fenced code blocks, in 2 of 2 answers, despite the instructions. S-14's trigger will likely fire. Felipe's answer (2026-09-29, "pode seguir"): keep S-14 as it is and decide after the measurement, when `pnpm count-code-answers` gives the count [D].
   - (b) The model drops Markdown link syntax inside quotes, which S-11 counts against the rate. Felipe's answer (2026-09-29, option "B"): allow it, as A-14 in §18 [D].
+- **A-14 in production** [F: CI, `vercel inspect`, `/api/health`]. Pushing `24b967e` with Felipe's OK redeployed production. CI passed, the deploy is Ready, the page serves `data-commit` `24b967e`, and `/api/health` reports the real model and Upstash.
+- **Phone check** [D: Felipe, 2026-09-29]. Felipe checked the live demo on his phone after the A-14 deploy: "Phone check ok". That closes step 4.
 
 ## 17. Proposals and answers
 
