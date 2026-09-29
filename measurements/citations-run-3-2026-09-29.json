@@ -1,0 +1,892 @@
+{
+  "date": "2026-09-29T22:00:36.282Z",
+  "url": "https://rag-citations-five.vercel.app",
+  "model": "openai/gpt-6-luna",
+  "location": "Fortaleza, home fibre",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.8010.12 Safari/537.36",
+  "browserVersion": "153.0.8010.12",
+  "platform": "darwin 25.6.0",
+  "commit": "24b967e571edd616992188cff24584a18b67656e",
+  "aborted": false,
+  "abortReason": null,
+  "run": 3,
+  "runs": 3,
+  "questionSet": {
+    "path": "measurements/questions.json",
+    "sha256": "0f9c2061590aef2bb92525f3f7bd8f18bfe7c9c952cb3673dfe3e72ac8e2a506"
+  },
+  "questionIds": [
+    "m31",
+    "m32",
+    "m33",
+    "m34",
+    "m35",
+    "m36",
+    "m37",
+    "m38",
+    "m39",
+    "m40",
+    "m41",
+    "m42",
+    "m43",
+    "m44",
+    "m45"
+  ],
+  "lastRequestAt": "2026-09-29T22:01:12.347Z",
+  "answers": [
+    {
+      "id": "m31",
+      "question": "Where should the token for a realtime session be created?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:00:38.405Z",
+      "classification": "answered-with-citations",
+      "answer": "Create the short-lived realtime token on your server, typically in a setup endpoint that the browser calls before connecting. [1: \"The browser calls your setup endpoint. Your server creates a short-lived realtime token\"] The setup endpoint uses `experimental_realtime.getToken()` to create it. [1: \"with `experimental_realtime.getToken()`\"] For AI Gateway, token creation must also run on the server because it uses your Gateway credential. [4: \"`gateway.experimental_realtime.getToken()` must run on your server\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "The browser calls your setup endpoint. Your server creates a short-lived realtime token",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "with `experimental_realtime.getToken()`",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 4,
+          "quote": "`gateway.experimental_realtime.getToken()` must run on your server",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5569381882681665,
+      "threshold": 0.44209528758554995,
+      "searchMs": 6.627512999999908,
+      "usage": {
+        "inputTokens": 1876,
+        "outputTokens": 110,
+        "totalTokens": 1986
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "36-realtime.mdx",
+          "heading": "Realtime",
+          "startLine": 5,
+          "endLine": 33,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-realtime.mdx?plain=1#L5-L33",
+          "score": 0.5569381882681665
+        },
+        {
+          "number": 2,
+          "file": "36-realtime.mdx",
+          "heading": "Realtime › Setup Endpoint",
+          "startLine": 34,
+          "endLine": 78,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-realtime.mdx?plain=1#L34-L78",
+          "score": 0.5154994886019085
+        },
+        {
+          "number": 3,
+          "file": "36-realtime.mdx",
+          "heading": "Realtime › Client Session",
+          "startLine": 140,
+          "endLine": 189,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-realtime.mdx?plain=1#L140-L189",
+          "score": 0.4617792375291539
+        },
+        {
+          "number": 4,
+          "file": "36-realtime.mdx",
+          "heading": "Realtime › AI Gateway",
+          "startLine": 79,
+          "endLine": 139,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-realtime.mdx?plain=1#L79-L139",
+          "score": 0.4497453920142374
+        },
+        {
+          "number": 5,
+          "file": "36-realtime.mdx",
+          "heading": "Realtime › Supported Providers",
+          "startLine": 270,
+          "endLine": 299,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-realtime.mdx?plain=1#L270-L299",
+          "score": 0.4323047746734923
+        }
+      ]
+    },
+    {
+      "id": "m32",
+      "question": "What happens if I don't set a source language for speech translation?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:00:43.586Z",
+      "classification": "answered-with-citations",
+      "answer": "If `sourceLanguage` is absent, the provider automatically detects the source language. [2: \"When `sourceLanguage` is absent, providers auto-detect the source language.\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 2,
+          "quote": "When `sourceLanguage` is absent, providers auto-detect the source language.",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.48457515419854413,
+      "threshold": 0.44209528758554995,
+      "searchMs": 1.3573740000001635,
+      "usage": {
+        "inputTokens": 2656,
+        "outputTokens": 41,
+        "totalTokens": 2697
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "36-translation.mdx",
+          "heading": "Translation › Settings",
+          "startLine": 103,
+          "endLine": 200,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-translation.mdx?plain=1#L103-L200",
+          "score": 0.48457515419854413
+        },
+        {
+          "number": 2,
+          "file": "36-translation.mdx",
+          "heading": "Translation",
+          "startLine": 5,
+          "endLine": 82,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-translation.mdx?plain=1#L5-L82",
+          "score": 0.43965788573799003
+        },
+        {
+          "number": 3,
+          "file": "37-speech.mdx",
+          "heading": "Speech › Settings",
+          "startLine": 30,
+          "endLine": 131,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/37-speech.mdx?plain=1#L30-L131",
+          "score": 0.3654570839921582
+        },
+        {
+          "number": 4,
+          "file": "25-settings.mdx",
+          "heading": "Settings",
+          "startLine": 5,
+          "endLine": 29,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/25-settings.mdx?plain=1#L5-L29",
+          "score": 0.3459680159433249
+        },
+        {
+          "number": 5,
+          "file": "37-speech.mdx",
+          "heading": "Speech",
+          "startLine": 5,
+          "endLine": 29,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/37-speech.mdx?plain=1#L5-L29",
+          "score": 0.3412189030306447
+        }
+      ]
+    },
+    {
+      "id": "m33",
+      "question": "How do I turn text into spoken audio?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:00:45.871Z",
+      "classification": "answered-with-citations",
+      "answer": "Use `generateSpeech` with a speech model, the text to speak, and a voice. For example, pass `model: openai.speech('gpt-4o-mini-tts')`, `text: 'Hello, world!'`, and `voice: 'alloy'`. [1: \"The AI SDK provides the generateSpeech function to generate speech from text using a speech model.\"]\n\nThe generated audio is available as a `Uint8Array` through `result.audio.uint8Array`, or as a base64 string through `result.audio.base64`. [1: \"const audioData = result.audio.uint8Array; // audio data as Uint8Array\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "The AI SDK provides the generateSpeech function to generate speech from text using a speech model.",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "const audioData = result.audio.uint8Array; // audio data as Uint8Array",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5241446181521259,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8834759999999733,
+      "usage": {
+        "inputTokens": 1426,
+        "outputTokens": 141,
+        "totalTokens": 1567
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "37-speech.mdx",
+          "heading": "Speech",
+          "startLine": 5,
+          "endLine": 29,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/37-speech.mdx?plain=1#L5-L29",
+          "score": 0.5241446181521259
+        },
+        {
+          "number": 2,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text",
+          "startLine": 5,
+          "endLine": 17,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L5-L17",
+          "score": 0.4677091175658692
+        },
+        {
+          "number": 3,
+          "file": "36-transcription.mdx",
+          "heading": "Transcription",
+          "startLine": 5,
+          "endLine": 32,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-transcription.mdx?plain=1#L5-L32",
+          "score": 0.45591212791232033
+        },
+        {
+          "number": 4,
+          "file": "01-overview.mdx",
+          "heading": "Overview › AI SDK Core Functions",
+          "startLine": 17,
+          "endLine": 28,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/01-overview.mdx?plain=1#L17-L28",
+          "score": 0.4048444002832661
+        },
+        {
+          "number": 5,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text › Examples",
+          "startLine": 762,
+          "endLine": 804,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L762-L804",
+          "score": 0.3809885809993272
+        }
+      ]
+    },
+    {
+      "id": "m34",
+      "question": "How do I use one uploaded file with both OpenAI and Anthropic?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:00:48.900Z",
+      "classification": "answered-with-citations",
+      "answer": "Upload the file separately to OpenAI and Anthropic using `uploadFile`, then merge the returned `providerReference` objects. [1: \"you need to upload the file to both providers and merge the references\"] For example, pass `openai.files()` and `anthropic.files()` as the `api` values, along with the same file data and filename. [1: \"uploadFile({\\n  api: openai.files(),\\n  data: imageBytes,\\n  filename: 'photo.png',\"] [1: \"api: anthropic.files(),\\n  data: imageBytes,\\n  filename: 'photo.png',\"]\n\nMerge them with `{ ...openaiResult.providerReference, ...anthropicResult.providerReference }`. [1: \"const mergedReference = {\\n  ...openaiResult.providerReference,\\n  ...anthropicResult.providerReference,\"] You can then use that merged reference in messages with either provider; each one will find its own file ID. [1: \"each provider will find its own file ID\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "you need to upload the file to both providers and merge the references",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "uploadFile({\\n  api: openai.files(),\\n  data: imageBytes,\\n  filename: 'photo.png',",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "api: anthropic.files(),\\n  data: imageBytes,\\n  filename: 'photo.png',",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "const mergedReference = {\\n  ...openaiResult.providerReference,\\n  ...anthropicResult.providerReference,",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "each provider will find its own file ID",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5823726428767878,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8312080000014248,
+      "usage": {
+        "inputTokens": 1184,
+        "outputTokens": 220,
+        "totalTokens": 1404
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "39-file-uploads.mdx",
+          "heading": "File Uploads › Multi-Provider Usage",
+          "startLine": 138,
+          "endLine": 167,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/39-file-uploads.mdx?plain=1#L138-L167",
+          "score": 0.5823726428767878
+        },
+        {
+          "number": 2,
+          "file": "39-file-uploads.mdx",
+          "heading": "File Uploads",
+          "startLine": 5,
+          "endLine": 51,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/39-file-uploads.mdx?plain=1#L5-L51",
+          "score": 0.5242954920806339
+        },
+        {
+          "number": 3,
+          "file": "41-skill-uploads.mdx",
+          "heading": "Skill Uploads › Multi-Provider Usage",
+          "startLine": 117,
+          "endLine": 145,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/41-skill-uploads.mdx?plain=1#L117-L145",
+          "score": 0.505909576683623
+        },
+        {
+          "number": 4,
+          "file": "41-skill-uploads.mdx",
+          "heading": "Skill Uploads › Supported Providers",
+          "startLine": 190,
+          "endLine": 197,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/41-skill-uploads.mdx?plain=1#L190-L197",
+          "score": 0.5004497850671725
+        },
+        {
+          "number": 5,
+          "file": "39-file-uploads.mdx",
+          "heading": "File Uploads › Supported Providers",
+          "startLine": 168,
+          "endLine": 180,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/39-file-uploads.mdx?plain=1#L168-L180",
+          "score": 0.47016248714013187
+        }
+      ]
+    },
+    {
+      "id": "m35",
+      "question": "In what order are multiple middlewares applied?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:00:52.456Z",
+      "classification": "answered-with-citations",
+      "answer": "Multiple middlewares are applied in the order they are provided to `wrapLanguageModel`; the first middleware wraps the second, which wraps the model. [1: \"The middlewares will be applied in the order they are provided.\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "The middlewares will be applied in the order they are provided.",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.6352495798117561,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.7933839999986958,
+      "usage": {
+        "inputTokens": 1320,
+        "outputTokens": 51,
+        "totalTokens": 1371
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "40-middleware.mdx",
+          "heading": "Language Model Middleware › Multiple middlewares",
+          "startLine": 39,
+          "endLine": 52,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/40-middleware.mdx?plain=1#L39-L52",
+          "score": 0.6352495798117561
+        },
+        {
+          "number": 2,
+          "file": "40-middleware.mdx",
+          "heading": "Language Model Middleware › Community Middleware",
+          "startLine": 259,
+          "endLine": 296,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/40-middleware.mdx?plain=1#L259-L296",
+          "score": 0.3978479523490647
+        },
+        {
+          "number": 3,
+          "file": "30-embeddings.mdx",
+          "heading": "Embeddings › Embedding Middleware",
+          "startLine": 188,
+          "endLine": 217,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/30-embeddings.mdx?plain=1#L188-L217",
+          "score": 0.38230751737231733
+        },
+        {
+          "number": 4,
+          "file": "40-middleware.mdx",
+          "heading": "Language Model Middleware",
+          "startLine": 5,
+          "endLine": 14,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/40-middleware.mdx?plain=1#L5-L14",
+          "score": 0.3679405661923408
+        },
+        {
+          "number": 5,
+          "file": "40-middleware.mdx",
+          "heading": "Language Model Middleware › Implementing Language Model Middleware",
+          "startLine": 297,
+          "endLine": 317,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/40-middleware.mdx?plain=1#L297-L317",
+          "score": 0.3581750176417811
+        }
+      ]
+    },
+    {
+      "id": "m36",
+      "question": "How do I upload a custom skill to a provider?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:00:54.892Z",
+      "classification": "answered-with-citations",
+      "answer": "Call `uploadSkill` with the provider’s skills API, the skill files (each with a relative `path` and `content`), and optionally a `displayTitle`. It returns a `providerReference` you can pass to later inference calls. [1: \"function to upload custom skills to a provider and get back a `ProviderReference`\"]\n\nFor example, use `api: anthropic.skills()` or `api: openai.skills()`; those providers support skill uploads. [2: \"Anthropic | `anthropic.skills()` | OpenAI    | `openai.skills()`\"] You can also pass the provider instance directly, such as `api: anthropic`, as shorthand. [1: \"you can pass a provider instance directly to `api` instead of calling `.skills()` explicitly\"]\n\nThe skill files can contain bytes (`Uint8Array`) or base64-encoded strings. [4: \"File content can be provided as a `Uint8Array` (e.g. from `fs.readFileSync`) or as a base64-encoded string\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "function to upload custom skills to a provider and get back a `ProviderReference`",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 2,
+          "quote": "Anthropic | `anthropic.skills()` | OpenAI    | `openai.skills()`",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "you can pass a provider instance directly to `api` instead of calling `.skills()` explicitly",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 4,
+          "quote": "File content can be provided as a `Uint8Array` (e.g. from `fs.readFileSync`) or as a base64-encoded string",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.6974022527076282,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.7846460000000661,
+      "usage": {
+        "inputTokens": 2075,
+        "outputTokens": 221,
+        "totalTokens": 2296
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "41-skill-uploads.mdx",
+          "heading": "Skill Uploads",
+          "startLine": 5,
+          "endLine": 64,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/41-skill-uploads.mdx?plain=1#L5-L64",
+          "score": 0.6974022527076282
+        },
+        {
+          "number": 2,
+          "file": "41-skill-uploads.mdx",
+          "heading": "Skill Uploads › Supported Providers",
+          "startLine": 190,
+          "endLine": 197,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/41-skill-uploads.mdx?plain=1#L190-L197",
+          "score": 0.6310195371987269
+        },
+        {
+          "number": 3,
+          "file": "41-skill-uploads.mdx",
+          "heading": "Skill Uploads › Multi-Provider Usage",
+          "startLine": 117,
+          "endLine": 145,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/41-skill-uploads.mdx?plain=1#L117-L145",
+          "score": 0.6168816694541108
+        },
+        {
+          "number": 4,
+          "file": "41-skill-uploads.mdx",
+          "heading": "Skill Uploads › Skill Files",
+          "startLine": 65,
+          "endLine": 86,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/41-skill-uploads.mdx?plain=1#L65-L86",
+          "score": 0.5984997864200259
+        },
+        {
+          "number": 5,
+          "file": "45-provider-management.mdx",
+          "heading": "Provider & Model Management › Custom Providers",
+          "startLine": 20,
+          "endLine": 176,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/45-provider-management.mdx?plain=1#L20-L176",
+          "score": 0.57004814773999
+        }
+      ]
+    },
+    {
+      "id": "m37",
+      "question": "Do batch results come back in the same order as my requests?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:00:58.008Z",
+      "classification": "model-refusal",
+      "answer": "I don't know. The AI SDK Core docs I search don't cover that.",
+      "citations": [],
+      "finishReason": "stop",
+      "topScore": 0.5178784658085313,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.9192699999985052,
+      "usage": {
+        "inputTokens": 1949,
+        "outputTokens": 19,
+        "totalTokens": 1968
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "42-batch.mdx",
+          "heading": "Batch › Retrieving results",
+          "startLine": 320,
+          "endLine": 356,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/42-batch.mdx?plain=1#L320-L356",
+          "score": 0.5178784658085313
+        },
+        {
+          "number": 2,
+          "file": "42-batch.mdx",
+          "heading": "Batch › Listing batches",
+          "startLine": 292,
+          "endLine": 319,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/42-batch.mdx?plain=1#L292-L319",
+          "score": 0.46419669027126076
+        },
+        {
+          "number": 3,
+          "file": "42-batch.mdx",
+          "heading": "Batch › Checking batch status",
+          "startLine": 227,
+          "endLine": 270,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/42-batch.mdx?plain=1#L227-L270",
+          "score": 0.426155747381702
+        },
+        {
+          "number": 4,
+          "file": "42-batch.mdx",
+          "heading": "Batch",
+          "startLine": 5,
+          "endLine": 52,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/42-batch.mdx?plain=1#L5-L52",
+          "score": 0.4161943003349622
+        },
+        {
+          "number": 5,
+          "file": "42-batch.mdx",
+          "heading": "Batch › Batch tools",
+          "startLine": 166,
+          "endLine": 226,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/42-batch.mdx?plain=1#L166-L226",
+          "score": 0.4087492485764987
+        }
+      ]
+    },
+    {
+      "id": "m38",
+      "question": "Which provider does a plain model ID string use by default?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:01:00.228Z",
+      "classification": "answered-with-citations",
+      "answer": "A plain model ID string uses Vercel AI Gateway by default. [3: \"By default, the global provider is set to the Vercel AI Gateway.\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 3,
+          "quote": "By default, the global provider is set to the Vercel AI Gateway.",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5476114407854968,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8935049999963667,
+      "usage": {
+        "inputTokens": 1978,
+        "outputTokens": 39,
+        "totalTokens": 2017
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "45-provider-management.mdx",
+          "heading": "Provider & Model Management",
+          "startLine": 5,
+          "endLine": 19,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/45-provider-management.mdx?plain=1#L5-L19",
+          "score": 0.5476114407854968
+        },
+        {
+          "number": 2,
+          "file": "32-evaluation.mdx",
+          "heading": "Evaluation › Model aliases and registries",
+          "startLine": 78,
+          "endLine": 182,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/32-evaluation.mdx?plain=1#L78-L182",
+          "score": 0.5428460926707218
+        },
+        {
+          "number": 3,
+          "file": "45-provider-management.mdx",
+          "heading": "Provider & Model Management › Global Provider Configuration",
+          "startLine": 434,
+          "endLine": 471,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/45-provider-management.mdx?plain=1#L434-L471",
+          "score": 0.5160943186348481
+        },
+        {
+          "number": 4,
+          "file": "45-provider-management.mdx",
+          "heading": "Provider & Model Management › Experimental evaluation models",
+          "startLine": 472,
+          "endLine": 480,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/45-provider-management.mdx?plain=1#L472-L480",
+          "score": 0.5009728212961818
+        },
+        {
+          "number": 5,
+          "file": "32-evaluation.mdx",
+          "heading": "Evaluation › Provider models",
+          "startLine": 47,
+          "endLine": 77,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/32-evaluation.mdx?plain=1#L47-L77",
+          "score": 0.484027134574875
+        }
+      ]
+    },
+    {
+      "id": "m39",
+      "question": "Which callback runs when the user stops a stream?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:01:02.293Z",
+      "classification": "answered-with-citations",
+      "answer": "Use `onAbort`: it is called when a stream is aborted via `AbortSignal`, such as when a user stops it. [1: \"The `onAbort` callback is called when a stream is aborted via `AbortSignal`\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "The `onAbort` callback is called when a stream is aborted via `AbortSignal`",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5139175647388262,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8817750000016531,
+      "usage": {
+        "inputTokens": 2429,
+        "outputTokens": 53,
+        "totalTokens": 2482
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "50-error-handling.mdx",
+          "heading": "Error Handling › Handling stream aborts",
+          "startLine": 188,
+          "endLine": 241,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/50-error-handling.mdx?plain=1#L188-L241",
+          "score": 0.5139175647388262
+        },
+        {
+          "number": 2,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text › `streamText` › `onEnd` callback",
+          "startLine": 327,
+          "endLine": 348,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L327-L348",
+          "score": 0.494267597497542
+        },
+        {
+          "number": 3,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text › `streamText` › Lifecycle callbacks (experimental)",
+          "startLine": 349,
+          "endLine": 424,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L349-L424",
+          "score": 0.4443518706093307
+        },
+        {
+          "number": 4,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text › `streamText` › `onChunk` callback",
+          "startLine": 278,
+          "endLine": 326,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L278-L326",
+          "score": 0.430125890286502
+        },
+        {
+          "number": 5,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text › `streamText` › `stream` property",
+          "startLine": 425,
+          "endLine": 544,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L425-L544",
+          "score": 0.4134745464319196
+        }
+      ]
+    },
+    {
+      "id": "m40",
+      "question": "What happens if one of my lifecycle callbacks throws?",
+      "inScope": true,
+      "askedAt": "2026-09-29T22:01:04.620Z",
+      "classification": "answered-with-citations",
+      "answer": "If a lifecycle callback throws, the error is caught internally and the AI SDK call continues; it does not break the generation flow. [4: \"If a callback throws, the error is caught internally and the AI SDK call continues.\"] For tool execution callbacks, thrown errors are likewise silently caught and do not break generation. [3: \"Errors thrown inside these callbacks are silently caught and do not break the generation flow.\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 4,
+          "quote": "If a callback throws, the error is caught internally and the AI SDK call continues.",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 3,
+          "quote": "Errors thrown inside these callbacks are silently caught and do not break the generation flow.",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.490292247134584,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.837470000002213,
+      "usage": {
+        "inputTokens": 2028,
+        "outputTokens": 90,
+        "totalTokens": 2118
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "65-lifecycle-callbacks.mdx",
+          "heading": "Lifecycle Callbacks",
+          "startLine": 5,
+          "endLine": 21,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/65-lifecycle-callbacks.mdx?plain=1#L5-L21",
+          "score": 0.490292247134584
+        },
+        {
+          "number": 2,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text › `streamText` › Lifecycle callbacks (experimental)",
+          "startLine": 349,
+          "endLine": 424,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L349-L424",
+          "score": 0.447497190640348
+        },
+        {
+          "number": 3,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › Multi-Step Calls (using stopWhen) › Tool execution lifecycle callbacks",
+          "startLine": 498,
+          "endLine": 534,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L498-L534",
+          "score": 0.4104866920930881
+        },
+        {
+          "number": 4,
+          "file": "65-lifecycle-callbacks.mdx",
+          "heading": "Lifecycle Callbacks › Basic Usage",
+          "startLine": 22,
+          "endLine": 50,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/65-lifecycle-callbacks.mdx?plain=1#L22-L50",
+          "score": 0.3719272824670571
+        },
+        {
+          "number": 5,
+          "file": "65-lifecycle-callbacks.mdx",
+          "heading": "Lifecycle Callbacks › Runtime and Tool Context",
+          "startLine": 302,
+          "endLine": 355,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/65-lifecycle-callbacks.mdx?plain=1#L302-L355",
+          "score": 0.36665696199967374
+        }
+      ]
+    },
+    {
+      "id": "m41",
+      "question": "How do I load and split my PDFs with LlamaIndex?",
+      "inScope": false,
+      "askedAt": "2026-09-29T22:01:07.627Z",
+      "classification": "gate-refusal",
+      "answer": "I don't know. The AI SDK Core docs I search don't cover that.",
+      "citations": [],
+      "finishReason": "stop",
+      "topScore": 0.3235343009590503,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.868772000001627,
+      "usage": null,
+      "sources": []
+    },
+    {
+      "id": "m42",
+      "question": "How do I keep my embeddings in a Qdrant collection?",
+      "inScope": false,
+      "askedAt": "2026-09-29T22:01:08.835Z",
+      "classification": "gate-refusal",
+      "answer": "I don't know. The AI SDK Core docs I search don't cover that.",
+      "citations": [],
+      "finishReason": "stop",
+      "topScore": 0.41296941218544014,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8834980000028736,
+      "usage": null,
+      "sources": []
+    },
+    {
+      "id": "m43",
+      "question": "How do I score the faithfulness of my RAG answers with RAGAS?",
+      "inScope": false,
+      "askedAt": "2026-09-29T22:01:09.993Z",
+      "classification": "gate-refusal",
+      "answer": "I don't know. The AI SDK Core docs I search don't cover that.",
+      "citations": [],
+      "finishReason": "stop",
+      "topScore": 0.35390108299208783,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.9015080000026501,
+      "usage": null,
+      "sources": []
+    },
+    {
+      "id": "m44",
+      "question": "How do I run a Stable Diffusion model in the browser with ONNX?",
+      "inScope": false,
+      "askedAt": "2026-09-29T22:01:11.104Z",
+      "classification": "gate-refusal",
+      "answer": "I don't know. The AI SDK Core docs I search don't cover that.",
+      "citations": [],
+      "finishReason": "stop",
+      "topScore": 0.39844678738952466,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.7543110000005981,
+      "usage": null,
+      "sources": []
+    },
+    {
+      "id": "m45",
+      "question": "How do I set up a GraphQL API with Apollo Server?",
+      "inScope": false,
+      "askedAt": "2026-09-29T22:01:12.347Z",
+      "classification": "gate-refusal",
+      "answer": "I don't know. The AI SDK Core docs I search don't cover that.",
+      "citations": [],
+      "finishReason": "stop",
+      "topScore": 0.40568866317042296,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.7736329999970621,
+      "usage": null,
+      "sources": []
+    }
+  ]
+}

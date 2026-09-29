@@ -1,0 +1,1156 @@
+{
+  "date": "2026-09-29T20:00:37.746Z",
+  "url": "https://rag-citations-five.vercel.app",
+  "model": "openai/gpt-6-luna",
+  "location": "Fortaleza, home fibre",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.8010.12 Safari/537.36",
+  "browserVersion": "153.0.8010.12",
+  "platform": "darwin 25.6.0",
+  "commit": "24b967e571edd616992188cff24584a18b67656e",
+  "aborted": false,
+  "abortReason": null,
+  "run": 2,
+  "runs": 3,
+  "questionSet": {
+    "path": "measurements/questions.json",
+    "sha256": "0f9c2061590aef2bb92525f3f7bd8f18bfe7c9c952cb3673dfe3e72ac8e2a506"
+  },
+  "questionIds": [
+    "m16",
+    "m17",
+    "m18",
+    "m19",
+    "m20",
+    "m21",
+    "m22",
+    "m23",
+    "m24",
+    "m25",
+    "m26",
+    "m27",
+    "m28",
+    "m29",
+    "m30"
+  ],
+  "lastRequestAt": "2026-09-29T20:01:22.461Z",
+  "answers": [
+    {
+      "id": "m16",
+      "question": "How do I retry MCP tool calls that fail because of rate limits?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:00:39.081Z",
+      "classification": "answered-with-citations",
+      "answer": "Pass `maxRetries` when creating the MCP client to enable automatic retries for `tools/call` requests; for example, set `maxRetries: 2`. Retries are disabled by default, and built-in matching covers transient HTTP and network failures, including rate limits. [1: \"MCP tool calls can fail for transient transport reasons, such as rate limits\"] Only enable retries for tools where retrying is safe, since repeating non-idempotent calls can duplicate side effects. [1: \"Retrying non-idempotent tools, such as tools that send emails or create records, can duplicate side effects.\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "MCP tool calls can fail for transient transport reasons, such as rate limits",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "Retrying non-idempotent tools, such as tools that send emails or create records, can duplicate side effects.",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.47715414723686717,
+      "threshold": 0.44209528758554995,
+      "searchMs": 2.722399000000223,
+      "usage": {
+        "inputTokens": 3585,
+        "outputTokens": 130,
+        "totalTokens": 3715
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP) › Initializing an MCP Client",
+          "startLine": 18,
+          "endLine": 339,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L18-L339",
+          "score": 0.47715414723686717
+        },
+        {
+          "number": 2,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps › Proxy App-Visible Tool Calls",
+          "startLine": 114,
+          "endLine": 153,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L114-L153",
+          "score": 0.4741336872380515
+        },
+        {
+          "number": 3,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps › Best Practices",
+          "startLine": 247,
+          "endLine": 255,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L247-L255",
+          "score": 0.4733499762114473
+        },
+        {
+          "number": 4,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › MCP Tools",
+          "startLine": 1472,
+          "endLine": 1492,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L1472-L1492",
+          "score": 0.4463623906661742
+        },
+        {
+          "number": 5,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP)",
+          "startLine": 5,
+          "endLine": 17,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L5-L17",
+          "score": 0.41203256942355576
+        }
+      ]
+    },
+    {
+      "id": "m17",
+      "question": "How can I tell if an MCP server changed a tool's definition after I approved it?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:00:44.679Z",
+      "classification": "answered-with-citations",
+      "answer": "Store a baseline fingerprint when you first review and approve the MCP tools. `fingerprintTools` digests each tool’s description, resolved input schema, and title into a stable map keyed by tool name. [1: \"`fingerprintTools` digests the server-controlled, security-relevant fields of each tool\"]\n\nOn later fetches, fingerprint the tools again and compare the new map with the baseline using `detectToolDrift`. Check its `changed` and `added` results; if either is non-empty, block use of the tools, require re-approval, or alert before passing them to the model. [1: \"`detectToolDrift` diffs two such maps\"] [1: \"Block, re-approve, or alert per your policy\"]\n\nYour app must store the baseline and decide how to respond; the SDK does not persist baselines or block calls. This detects changes to descriptions, input schemas, and titles, but not a remote behavior or endpoint swap when those fields remain unchanged. [1: \"Core stays unopinionated: it does not persist baselines or block calls\"] [1: \"It cannot detect a behavior/endpoint swap\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "`fingerprintTools` digests the server-controlled, security-relevant fields of each tool",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "`detectToolDrift` diffs two such maps",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "Block, re-approve, or alert per your policy",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "Core stays unopinionated: it does not persist baselines or block calls",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "It cannot detect a behavior/endpoint swap",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.62129679011541,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.9232329999995272,
+      "usage": {
+        "inputTokens": 2642,
+        "outputTokens": 242,
+        "totalTokens": 2884
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP) › Detecting tool-definition drift (\"rug pull\")",
+          "startLine": 648,
+          "endLine": 691,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L648-L691",
+          "score": 0.62129679011541
+        },
+        {
+          "number": 2,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP) › Using MCP Tools",
+          "startLine": 340,
+          "endLine": 485,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L340-L485",
+          "score": 0.554988337847743
+        },
+        {
+          "number": 3,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › MCP Tools",
+          "startLine": 1472,
+          "endLine": 1492,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L1472-L1492",
+          "score": 0.5329925958415934
+        },
+        {
+          "number": 4,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps › Proxy App-Visible Tool Calls",
+          "startLine": 114,
+          "endLine": 153,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L114-L153",
+          "score": 0.4607779308686752
+        },
+        {
+          "number": 5,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps › Best Practices",
+          "startLine": 247,
+          "endLine": 255,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L247-L255",
+          "score": 0.4578053058987577
+        }
+      ]
+    },
+    {
+      "id": "m18",
+      "question": "How do I handle an MCP server that asks the user for more input during a tool call?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:00:48.752Z",
+      "classification": "answered-with-citations",
+      "answer": "Advertise elicitation support when creating the MCP client by setting `capabilities: { elicitation: {} }`. [1: \"To enable elicitation, you need to advertise the capability when creating the MCP client\"] Register an `onElicitationRequest` handler to receive the server’s request; it includes a message and a schema describing the expected input. [1: \"Use the `onElicitationRequest` method to register a handler that will be called when the server requests input\"] In the handler, collect the input in a way appropriate to your application, then return an action: `accept` with `content` containing the supplied data, `decline` if the user refuses, or `cancel` if they cancel the operation. [1: \"Your handler must return an object with an `action` field that can be one of\"] The MCP client surfaces requests to your application; the client itself does not handle them for you. [1: \"The MCP client simply surfaces these requests from the server to your application code\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "To enable elicitation, you need to advertise the capability when creating the MCP client",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "Use the `onElicitationRequest` method to register a handler that will be called when the server requests input",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "Your handler must return an object with an `action` field that can be one of",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "The MCP client simply surfaces these requests from the server to your application code",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5410326209254245,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.9350549999999203,
+      "usage": {
+        "inputTokens": 2439,
+        "outputTokens": 216,
+        "totalTokens": 2655
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP) › Handling Elicitation Requests",
+          "startLine": 589,
+          "endLine": 647,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L589-L647",
+          "score": 0.5410326209254245
+        },
+        {
+          "number": 2,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps › Best Practices",
+          "startLine": 247,
+          "endLine": 255,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L247-L255",
+          "score": 0.5378295123935788
+        },
+        {
+          "number": 3,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP) › Using MCP Tools",
+          "startLine": 340,
+          "endLine": 485,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L340-L485",
+          "score": 0.5284938588491408
+        },
+        {
+          "number": 4,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › MCP Tools",
+          "startLine": 1472,
+          "endLine": 1492,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L1472-L1492",
+          "score": 0.5232460490796056
+        },
+        {
+          "number": 5,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP)",
+          "startLine": 5,
+          "endLine": 17,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L5-L17",
+          "score": 0.4848685152283813
+        }
+      ]
+    },
+    {
+      "id": "m19",
+      "question": "Where does an MCP App render its HTML?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:00:52.416Z",
+      "classification": "answered-with-citations",
+      "answer": "An MCP App’s HTML renders in a sandboxed iframe. [1: \"tools can point to a `ui://` resource containing HTML that your app renders in a sandboxed iframe\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "tools can point to a `ui://` resource containing HTML that your app renders in a sandboxed iframe",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.652165193356028,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8682330000010552,
+      "usage": {
+        "inputTokens": 983,
+        "outputTokens": 42,
+        "totalTokens": 1025
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps",
+          "startLine": 5,
+          "endLine": 14,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L5-L14",
+          "score": 0.652165193356028
+        },
+        {
+          "number": 2,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps › Best Practices",
+          "startLine": 247,
+          "endLine": 255,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L247-L255",
+          "score": 0.6176682856268729
+        },
+        {
+          "number": 3,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps › Host Flow",
+          "startLine": 15,
+          "endLine": 25,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L15-L25",
+          "score": 0.5790187194480522
+        },
+        {
+          "number": 4,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP) › Examples",
+          "startLine": 692,
+          "endLine": 711,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L692-L711",
+          "score": 0.5541585727345055
+        },
+        {
+          "number": 5,
+          "file": "17-mcp-apps.mdx",
+          "heading": "MCP Apps › Connect With MCP Apps Support",
+          "startLine": 26,
+          "endLine": 44,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-mcp-apps.mdx?plain=1#L26-L44",
+          "score": 0.5359208859366744
+        }
+      ]
+    },
+    {
+      "id": "m20",
+      "question": "Is runtimeContext sent to the model as part of the prompt?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:00:54.774Z",
+      "classification": "answered-with-citations",
+      "answer": "No. `runtimeContext` is not added to the model prompt automatically; it passes server-side state through a generation or agent loop without putting that state into the prompt. [1: \"It is not added to the model prompt automatically.\"] [2: \"Context lets you pass server-side state through a generation or agent loop without putting that state into the prompt.\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "It is not added to the model prompt automatically.",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 2,
+          "quote": "Context lets you pass server-side state through a generation or agent loop without putting that state into the prompt.",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.631888436150515,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8864750000011554,
+      "usage": {
+        "inputTokens": 1568,
+        "outputTokens": 79,
+        "totalTokens": 1647
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "17-runtime-and-tool-context.mdx",
+          "heading": "Runtime and Tool Context › Runtime Context",
+          "startLine": 45,
+          "endLine": 74,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-runtime-and-tool-context.mdx?plain=1#L45-L74",
+          "score": 0.631888436150515
+        },
+        {
+          "number": 2,
+          "file": "17-runtime-and-tool-context.mdx",
+          "heading": "Runtime and Tool Context",
+          "startLine": 5,
+          "endLine": 16,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-runtime-and-tool-context.mdx?plain=1#L5-L16",
+          "score": 0.610661045090281
+        },
+        {
+          "number": 3,
+          "file": "65-lifecycle-callbacks.mdx",
+          "heading": "Lifecycle Callbacks › Runtime and Tool Context",
+          "startLine": 302,
+          "endLine": 355,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/65-lifecycle-callbacks.mdx?plain=1#L302-L355",
+          "score": 0.5406058721203703
+        },
+        {
+          "number": 4,
+          "file": "17-runtime-and-tool-context.mdx",
+          "heading": "Runtime and Tool Context › Choosing the Right Context",
+          "startLine": 215,
+          "endLine": 228,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-runtime-and-tool-context.mdx?plain=1#L215-L228",
+          "score": 0.5316262711803708
+        },
+        {
+          "number": 5,
+          "file": "17-runtime-and-tool-context.mdx",
+          "heading": "Runtime and Tool Context › Context Types",
+          "startLine": 17,
+          "endLine": 44,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/17-runtime-and-tool-context.mdx?plain=1#L17-L44",
+          "score": 0.49597012862788825
+        }
+      ]
+    },
+    {
+      "id": "m21",
+      "question": "Can a code mode program call fetch or read files?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:00:57.410Z",
+      "classification": "model-refusal",
+      "answer": "I don't know. The AI SDK Core docs I search don't cover that.",
+      "citations": [],
+      "finishReason": "stop",
+      "topScore": 0.47859725165722916,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8212449999991804,
+      "usage": {
+        "inputTokens": 2111,
+        "outputTokens": 19,
+        "totalTokens": 2130
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "18-code-mode.mdx",
+          "heading": "Code Mode › Writing Code Mode Programs",
+          "startLine": 187,
+          "endLine": 206,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/18-code-mode.mdx?plain=1#L187-L206",
+          "score": 0.47859725165722916
+        },
+        {
+          "number": 2,
+          "file": "18-code-mode.mdx",
+          "heading": "Code Mode › Direct Execution",
+          "startLine": 207,
+          "endLine": 232,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/18-code-mode.mdx?plain=1#L207-L232",
+          "score": 0.4586004846553976
+        },
+        {
+          "number": 3,
+          "file": "18-code-mode.mdx",
+          "heading": "Code Mode",
+          "startLine": 5,
+          "endLine": 24,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/18-code-mode.mdx?plain=1#L5-L24",
+          "score": 0.446562644816718
+        },
+        {
+          "number": 4,
+          "file": "19-tool-search.mdx",
+          "heading": "Tool Search › Code Mode",
+          "startLine": 43,
+          "endLine": 82,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/19-tool-search.mdx?plain=1#L43-L82",
+          "score": 0.43442754773499476
+        },
+        {
+          "number": 5,
+          "file": "18-code-mode.mdx",
+          "heading": "Code Mode › Using Code Mode with `generateText`",
+          "startLine": 31,
+          "endLine": 186,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/18-code-mode.mdx?plain=1#L31-L186",
+          "score": 0.36795951658038617
+        }
+      ]
+    },
+    {
+      "id": "m22",
+      "question": "How do I let the model discover tools on demand instead of sending all of them?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:00:59.619Z",
+      "classification": "answered-with-citations",
+      "answer": "Set tools you want to defer to `deferLoading: true`, then register `toolSearch()` in the `tools` object. The model initially sees only the search tool; after searching, matching tool definitions are added and the model can call them directly. [5: \"The model initially sees only `search`. After searching, matching definitions are added to the provider's tool list\"]\n\nYou can use this with `generateText`, `streamText`, `ToolLoopAgent`, or `WorkflowAgent`; `toolSearch()` takes no arguments because the model supplies the search query. [1: \"`toolSearch()` lets a model find the tools it needs without loading every tool's definition into its initial context\"] Discovered tools are available for the rest of that generation. [4: \"keeps discovered tools available for the rest of the generation\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 5,
+          "quote": "The model initially sees only `search`. After searching, matching definitions are added to the provider's tool list",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "`toolSearch()` lets a model find the tools it needs without loading every tool's definition into its initial context",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 4,
+          "quote": "keeps discovered tools available for the rest of the generation",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5408021031390373,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8533919999972568,
+      "usage": {
+        "inputTokens": 2222,
+        "outputTokens": 174,
+        "totalTokens": 2396
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "19-tool-search.mdx",
+          "heading": "Tool Search",
+          "startLine": 5,
+          "endLine": 17,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/19-tool-search.mdx?plain=1#L5-L17",
+          "score": 0.5408021031390373
+        },
+        {
+          "number": 2,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › Tool Choice",
+          "startLine": 767,
+          "endLine": 800,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L767-L800",
+          "score": 0.536007087386851
+        },
+        {
+          "number": 3,
+          "file": "18-code-mode.mdx",
+          "heading": "Code Mode › Using Code Mode with `generateText`",
+          "startLine": 31,
+          "endLine": 186,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/18-code-mode.mdx?plain=1#L31-L186",
+          "score": 0.5271771967289952
+        },
+        {
+          "number": 4,
+          "file": "19-tool-search.mdx",
+          "heading": "Tool Search › Code Mode",
+          "startLine": 43,
+          "endLine": 82,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/19-tool-search.mdx?plain=1#L43-L82",
+          "score": 0.5205459765747215
+        },
+        {
+          "number": 5,
+          "file": "19-tool-search.mdx",
+          "heading": "Tool Search › Direct Tool Calling",
+          "startLine": 18,
+          "endLine": 42,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/19-tool-search.mdx?plain=1#L18-L42",
+          "score": 0.5184524754320929
+        }
+      ]
+    },
+    {
+      "id": "m23",
+      "question": "Should optional tool parameters use nullable or optional in Zod?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:01:03.048Z",
+      "classification": "answered-with-citations",
+      "answer": "Use `.nullable()` instead of `.optional()` for optional tool parameters when you need compatibility with providers that use strict schema validation, particularly OpenAI models with structured outputs in strict mode. [1: \"For maximum compatibility, optional parameters should use `.nullable()` instead of `.optional()`\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "For maximum compatibility, optional parameters should use `.nullable()` instead of `.optional()`",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.45658989147783113,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.9300920000023325,
+      "usage": {
+        "inputTokens": 3089,
+        "outputTokens": 61,
+        "totalTokens": 3150
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "20-prompt-engineering.mdx",
+          "heading": "Prompt Engineering › Tips",
+          "startLine": 8,
+          "endLine": 114,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/20-prompt-engineering.mdx?plain=1#L8-L114",
+          "score": 0.45658989147783113
+        },
+        {
+          "number": 2,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › Tool Choice",
+          "startLine": 767,
+          "endLine": 800,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L767-L800",
+          "score": 0.44799054795913557
+        },
+        {
+          "number": 3,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › Strict Mode",
+          "startLine": 106,
+          "endLine": 131,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L106-L131",
+          "score": 0.40409235303908375
+        },
+        {
+          "number": 4,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › Dynamic Tools",
+          "startLine": 668,
+          "endLine": 732,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L668-L732",
+          "score": 0.3940514188145829
+        },
+        {
+          "number": 5,
+          "file": "16-mcp-tools.mdx",
+          "heading": "Model Context Protocol (MCP) › Using MCP Tools",
+          "startLine": 340,
+          "endLine": 485,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/16-mcp-tools.mdx?plain=1#L340-L485",
+          "score": 0.36416593618945803
+        }
+      ]
+    },
+    {
+      "id": "m24",
+      "question": "Should I set temperature and topP at the same time?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:01:06.855Z",
+      "classification": "gate-refusal",
+      "answer": "I don't know. The AI SDK Core docs I search don't cover that.",
+      "citations": [],
+      "finishReason": "stop",
+      "topScore": 0.27707455985143736,
+      "threshold": 0.44209528758554995,
+      "searchMs": 1.1562979999980598,
+      "usage": null,
+      "sources": []
+    },
+    {
+      "id": "m25",
+      "question": "How do I abort a stream that stalls after it has started?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:01:08.227Z",
+      "classification": "answered-with-citations",
+      "answer": "Use an `AbortSignal` to abort the stream after it starts. The docs say `onAbort` is called when a stream is aborted via `AbortSignal`, and can be used for cleanup; `onEnd` is not called in this case. [1: \"The `onAbort` callback is called when a stream is aborted via `AbortSignal`, but `onEnd` is not called.\"] The passages don’t show how to attach an `AbortSignal` to `streamText` or set a timeout for a text stream; their timeout example applies to video generation. [4: \"`experimental_generateVideo` accepts an optional `abortSignal` parameter\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "The `onAbort` callback is called when a stream is aborted via `AbortSignal`, but `onEnd` is not called.",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 4,
+          "quote": "`experimental_generateVideo` accepts an optional `abortSignal` parameter",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5536740070479974,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8855910000020231,
+      "usage": {
+        "inputTokens": 1855,
+        "outputTokens": 139,
+        "totalTokens": 1994
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "50-error-handling.mdx",
+          "heading": "Error Handling › Handling stream aborts",
+          "startLine": 188,
+          "endLine": 241,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/50-error-handling.mdx?plain=1#L188-L241",
+          "score": 0.5536740070479974
+        },
+        {
+          "number": 2,
+          "file": "50-error-handling.mdx",
+          "heading": "Error Handling › Handling streaming errors (streaming with `error` support)",
+          "startLine": 52,
+          "endLine": 103,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/50-error-handling.mdx?plain=1#L52-L103",
+          "score": 0.40229371343061193
+        },
+        {
+          "number": 3,
+          "file": "50-error-handling.mdx",
+          "heading": "Error Handling › Handling streaming errors (simple streams)",
+          "startLine": 28,
+          "endLine": 51,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/50-error-handling.mdx?plain=1#L28-L51",
+          "score": 0.39047201469255727
+        },
+        {
+          "number": 4,
+          "file": "38-video-generation.mdx",
+          "heading": "Video Generation › Settings › Abort Signals and Timeouts",
+          "startLine": 286,
+          "endLine": 307,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/38-video-generation.mdx?plain=1#L286-L307",
+          "score": 0.3764348799044807
+        },
+        {
+          "number": 5,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text › `streamText` › `stream` property",
+          "startLine": 425,
+          "endLine": 544,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L425-L544",
+          "score": 0.36247998278610377
+        }
+      ]
+    },
+    {
+      "id": "m26",
+      "question": "If I set both reasoning and reasoning options in providerOptions, which one wins?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:01:10.942Z",
+      "classification": "answered-with-citations",
+      "answer": "The reasoning-related settings in `providerOptions` win; they take full precedence, and the top-level `reasoning` parameter is ignored. [1: \"If you set reasoning-related options in `providerOptions`, they take full precedence and the top-level `reasoning` parameter is ignored.\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "If you set reasoning-related options in `providerOptions`, they take full precedence and the top-level `reasoning` parameter is ignored.",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.7030842993285717,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.850523000000976,
+      "usage": {
+        "inputTokens": 1900,
+        "outputTokens": 64,
+        "totalTokens": 1964
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "26-reasoning.mdx",
+          "heading": "Reasoning › Precedence Rules",
+          "startLine": 56,
+          "endLine": 77,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/26-reasoning.mdx?plain=1#L56-L77",
+          "score": 0.7030842993285717
+        },
+        {
+          "number": 2,
+          "file": "26-reasoning.mdx",
+          "heading": "Reasoning › Provider Support",
+          "startLine": 78,
+          "endLine": 83,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/26-reasoning.mdx?plain=1#L78-L83",
+          "score": 0.6241586063231116
+        },
+        {
+          "number": 3,
+          "file": "26-reasoning.mdx",
+          "heading": "Reasoning › Migrating from `providerOptions`",
+          "startLine": 84,
+          "endLine": 191,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/26-reasoning.mdx?plain=1#L84-L191",
+          "score": 0.6063519128993106
+        },
+        {
+          "number": 4,
+          "file": "32-evaluation.mdx",
+          "heading": "Evaluation › Provider models",
+          "startLine": 47,
+          "endLine": 77,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/32-evaluation.mdx?plain=1#L47-L77",
+          "score": 0.5149867421360859
+        },
+        {
+          "number": 5,
+          "file": "26-reasoning.mdx",
+          "heading": "Reasoning",
+          "startLine": 5,
+          "endLine": 9,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/26-reasoning.mdx?plain=1#L5-L9",
+          "score": 0.4732704215088192
+        }
+      ]
+    },
+    {
+      "id": "m27",
+      "question": "How do I see how many tokens an embedding call used?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:01:13.176Z",
+      "classification": "answered-with-citations",
+      "answer": "The result from `embed` includes a `usage` property; read `usage.tokens` to see how many tokens the call used. [1: \"Both `embed` and `embedMany` provide token usage information in the `usage` property of the result object\"] [1: \"console.log(usage); // { tokens: 10 }\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "Both `embed` and `embedMany` provide token usage information in the `usage` property of the result object",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "console.log(usage); // { tokens: 10 }",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.7146715024367447,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8287399999971967,
+      "usage": {
+        "inputTokens": 2795,
+        "outputTokens": 76,
+        "totalTokens": 2871
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "30-embeddings.mdx",
+          "heading": "Embeddings › Token Usage",
+          "startLine": 70,
+          "endLine": 85,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/30-embeddings.mdx?plain=1#L70-L85",
+          "score": 0.7146715024367447
+        },
+        {
+          "number": 2,
+          "file": "65-lifecycle-callbacks.mdx",
+          "heading": "Lifecycle Callbacks › Event Data Reference › Embedding Events",
+          "startLine": 946,
+          "endLine": 1056,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/65-lifecycle-callbacks.mdx?plain=1#L946-L1056",
+          "score": 0.5150302435597574
+        },
+        {
+          "number": 3,
+          "file": "65-lifecycle-callbacks.mdx",
+          "heading": "Lifecycle Callbacks › Use Cases",
+          "startLine": 51,
+          "endLine": 272,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/65-lifecycle-callbacks.mdx?plain=1#L51-L272",
+          "score": 0.47566627418521307
+        },
+        {
+          "number": 4,
+          "file": "30-embeddings.mdx",
+          "heading": "Embeddings › Response Information",
+          "startLine": 173,
+          "endLine": 187,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/30-embeddings.mdx?plain=1#L173-L187",
+          "score": 0.4596919417263922
+        },
+        {
+          "number": 5,
+          "file": "30-embeddings.mdx",
+          "heading": "Embeddings › Embedding a Single Value",
+          "startLine": 11,
+          "endLine": 26,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/30-embeddings.mdx?plain=1#L11-L26",
+          "score": 0.44902374363662484
+        }
+      ]
+    },
+    {
+      "id": "m28",
+      "question": "How do I keep only the most relevant documents after reranking?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:01:15.698Z",
+      "classification": "answered-with-citations",
+      "answer": "Set `topN` in the `rerank` call to the number of most relevant documents you want returned; for example, `topN: 2` returns the top two. [1: \"topN: 2, // Return top 2 most relevant documents\"] The result’s `ranking` is sorted by relevance, and `rerankedDocuments` provides the documents in that order. [4: \"rerankedDocuments: documents sorted by relevance (convenience property)\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "topN: 2, // Return top 2 most relevant documents",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 4,
+          "quote": "rerankedDocuments: documents sorted by relevance (convenience property)",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.6948252383259289,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.757593000002089,
+      "usage": {
+        "inputTokens": 1707,
+        "outputTokens": 104,
+        "totalTokens": 1811
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "31-reranking.mdx",
+          "heading": "Reranking › Reranking Documents",
+          "startLine": 12,
+          "endLine": 40,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/31-reranking.mdx?plain=1#L12-L40",
+          "score": 0.6948252383259289
+        },
+        {
+          "number": 2,
+          "file": "31-reranking.mdx",
+          "heading": "Reranking",
+          "startLine": 5,
+          "endLine": 11,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/31-reranking.mdx?plain=1#L5-L11",
+          "score": 0.6591032521788687
+        },
+        {
+          "number": 3,
+          "file": "31-reranking.mdx",
+          "heading": "Reranking › Working with Object Documents",
+          "startLine": 41,
+          "endLine": 72,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/31-reranking.mdx?plain=1#L41-L72",
+          "score": 0.6395251045687684
+        },
+        {
+          "number": 4,
+          "file": "31-reranking.mdx",
+          "heading": "Reranking › Understanding the Results",
+          "startLine": 73,
+          "endLine": 97,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/31-reranking.mdx?plain=1#L73-L97",
+          "score": 0.623572131205707
+        },
+        {
+          "number": 5,
+          "file": "65-lifecycle-callbacks.mdx",
+          "heading": "Lifecycle Callbacks › Event Data Reference › Rerank Events",
+          "startLine": 1057,
+          "endLine": 1173,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/65-lifecycle-callbacks.mdx?plain=1#L1057-L1173",
+          "score": 0.5367775260988086
+        }
+      ]
+    },
+    {
+      "id": "m29",
+      "question": "Does a boolean evaluation probability tell me how confident the model is?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:01:18.705Z",
+      "classification": "answered-with-citations",
+      "answer": "No. A Boolean probability estimates P(true); it is not confidence in either outcome. [1: \"It is not confidence in either outcome.\"] It also may not be calibrated consistently across providers, so choose thresholds using labeled data from your task rather than assuming one threshold works everywhere. [1: \"The SDK does not promise calibration across providers.\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "It is not confidence in either outcome.",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "The SDK does not promise calibration across providers.",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.5618184953599714,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.8015760000052978,
+      "usage": {
+        "inputTokens": 1778,
+        "outputTokens": 75,
+        "totalTokens": 1853
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "32-evaluation.mdx",
+          "heading": "Evaluation › Probabilities and confidence",
+          "startLine": 212,
+          "endLine": 243,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/32-evaluation.mdx?plain=1#L212-L243",
+          "score": 0.5618184953599714
+        },
+        {
+          "number": 2,
+          "file": "32-evaluation.mdx",
+          "heading": "Evaluation › Provider models",
+          "startLine": 47,
+          "endLine": 77,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/32-evaluation.mdx?plain=1#L47-L77",
+          "score": 0.42981112712713565
+        },
+        {
+          "number": 3,
+          "file": "32-evaluation.mdx",
+          "heading": "Evaluation",
+          "startLine": 5,
+          "endLine": 46,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/32-evaluation.mdx?plain=1#L5-L46",
+          "score": 0.39957099569002896
+        },
+        {
+          "number": 4,
+          "file": "32-evaluation.mdx",
+          "heading": "Evaluation › Scope and examples",
+          "startLine": 264,
+          "endLine": 275,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/32-evaluation.mdx?plain=1#L264-L275",
+          "score": 0.38639675115658806
+        },
+        {
+          "number": 5,
+          "file": "32-evaluation.mdx",
+          "heading": "Evaluation › Question types",
+          "startLine": 183,
+          "endLine": 211,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/32-evaluation.mdx?plain=1#L183-L211",
+          "score": 0.37633306399968003
+        }
+      ]
+    },
+    {
+      "id": "m30",
+      "question": "How do I get the images a language model like Gemini generates?",
+      "inScope": true,
+      "askedAt": "2026-09-29T20:01:22.461Z",
+      "classification": "answered-with-citations",
+      "answer": "For a multimodal model such as Google’s `gemini-3.1-flash-image-preview`, call `generateText` and read the generated images from the response’s `files` property. [1: \"you can access the generated images using the `files` property of the response.\"] Iterate over `result.files` and select entries whose `mediaType` starts with `image/`. [1: \"if (file.mediaType.startsWith('image/'))\"]\n\nEach file provides image data as a base64 string in `file.base64` or binary data in `file.uint8Array`, along with its media type. [1: \"Access images as base64 string, Uint8Array binary data, or check type\"]",
+      "citations": [
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "you can access the generated images using the `files` property of the response.",
+          "status": "verified"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "if (file.mediaType.startsWith('image/'))",
+          "status": "not-found"
+        },
+        {
+          "type": "citation",
+          "n": 1,
+          "quote": "Access images as base64 string, Uint8Array binary data, or check type",
+          "status": "verified"
+        }
+      ],
+      "finishReason": "stop",
+      "topScore": 0.68159723964576,
+      "threshold": 0.44209528758554995,
+      "searchMs": 0.7956789999952889,
+      "usage": {
+        "inputTokens": 1931,
+        "outputTokens": 154,
+        "totalTokens": 2085
+      },
+      "sources": [
+        {
+          "number": 1,
+          "file": "35-image-generation.mdx",
+          "heading": "Image Generation › Generating Images with Language Models",
+          "startLine": 287,
+          "endLine": 311,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/35-image-generation.mdx?plain=1#L287-L311",
+          "score": 0.68159723964576
+        },
+        {
+          "number": 2,
+          "file": "36-translation.mdx",
+          "heading": "Translation › Translation Models",
+          "startLine": 201,
+          "endLine": 209,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/36-translation.mdx?plain=1#L201-L209",
+          "score": 0.4848382261952756
+        },
+        {
+          "number": 3,
+          "file": "15-tools-and-tool-calling.mdx",
+          "heading": "Tool Calling › Multi-modal Tool Results",
+          "startLine": 1382,
+          "endLine": 1447,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/15-tools-and-tool-calling.mdx?plain=1#L1382-L1447",
+          "score": 0.46188462256624985
+        },
+        {
+          "number": 4,
+          "file": "30-embeddings.mdx",
+          "heading": "Embeddings › Embedding Providers & Models",
+          "startLine": 218,
+          "endLine": 239,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/30-embeddings.mdx?plain=1#L218-L239",
+          "score": 0.44721987698482607
+        },
+        {
+          "number": 5,
+          "file": "05-generating-text.mdx",
+          "heading": "Generating Text",
+          "startLine": 5,
+          "endLine": 17,
+          "url": "https://github.com/vercel/ai/blob/3f3a717e2237c56aed9fab22269f07ccfeb0a142/content/docs/03-ai-sdk-core/05-generating-text.mdx?plain=1#L5-L17",
+          "score": 0.4405333723612747
+        }
+      ]
+    }
+  ]
+}
