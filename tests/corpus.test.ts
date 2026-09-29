@@ -14,6 +14,7 @@ import {
 } from "@/lib/rag/config";
 import { corpusHash, corpusManifest, readCorpus } from "@/lib/rag/corpus";
 import { readIndexFile } from "@/lib/rag/index-file";
+import { normalise, verifyQuote } from "@/lib/rag/verify";
 
 const files = readCorpus(CORPUS_DIR);
 
@@ -114,6 +115,28 @@ describe("the chunks of the committed corpus", () => {
     const long = chunks.filter((chunk) => countWords(chunk.text) > MAX_SECTION_WORDS);
     for (const { id, text } of long) {
       expect(subheadings(text.split("\n").slice(1)), id).toEqual([]);
+    }
+  });
+});
+
+/** A passage's first, middle and last runs of n words, joined by single spaces. */
+function quotesFrom(text: string, n: number): string[] {
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length < n) return [];
+  const starts = [0, Math.floor((words.length - n) / 2), words.length - n];
+  return starts.map((start) => words.slice(start, start + n).join(" "));
+}
+
+// verifyQuote on the real MDX passages (spec §6.3): a phrase copied from a passage is verified,
+// and its mark holds that phrase, so the quote is literally at the GitHub link (spec §4.1).
+describe("quotes copied from the committed passages", () => {
+  it("are verified, and their mark holds the quote", () => {
+    for (const { id, text } of chunkCorpus(files)) {
+      for (const quote of quotesFrom(text, 10)) {
+        const result = verifyQuote(quote, text);
+        const mark = result.status === "verified" ? text.slice(result.start, result.end) : null;
+        expect(mark && normalise(mark), `${id}: ${quote}`).toBe(normalise(quote));
+      }
     }
   });
 });
