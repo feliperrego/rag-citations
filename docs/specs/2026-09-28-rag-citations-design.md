@@ -11,7 +11,7 @@
 |---|---|
 | `[F]` | Fact, with its source. |
 | `[D]` | Decision taken by Felipe, with a reference. |
-| `[P]` | Proposal or estimate, not yet confirmed. Estimates and inferences say so (`[P: arithmetic …]`, `[P: estimate]`, `[P: inference]`) and need no answer. None is open: the S-xx and X-01 items of §17 were approved, and are cited as `[D: S-xx]`. |
+| `[P]` | Proposal or estimate, not yet confirmed. Estimates and inferences say so (`[P: arithmetic …]`, `[P: estimate]`, `[P: inference]`) and need no answer. The S-xx and X-01 items of §17 were approved and are cited as `[D: S-xx]`. A-07 to A-12 in §18 were approved on 2026-09-29. None is open. |
 
 Decision references:
 
@@ -362,6 +362,30 @@ All items below were approved on 2026-09-28 ("todas ok"); X-01 took option (a).
 | S-27 | The mocks: word-hash embedder, magic-token scenarios, the pinned mock threshold | 8, 10 |
 | S-28 | Suggested prompts checked against the frozen threshold; a prompt on the wrong side is reworded, never the threshold | 8 |
 
+
+## 18. Amendments from the prototype (2026-09-29)
+
+Before the plan was written, a throwaway prototype of this spec was built, reviewed by five independent reviewers each followed by a skeptic, fixed, and verified. At every task end: lint, typecheck, unit and e2e. At the tip: 746 unit tests; 82 e2e tests green three times in CI mode; a stress run of 328/328. The plan `docs/plans/2026-09-29-rag-citations.md` is generated from it. The prototype settled some points that the text above leaves open, and it raised items for Felipe.
+
+**Facts that refine the text above** `[F: prototype]`:
+
+- **A-01 (§4.1).** The pinned corpus gives 239 chunks from 32 files. The mock-mode `index.json` is 513,593 bytes and differs from one build to the next only in `builtAt`.
+- **A-02 (§6.3).** `verifyQuote(quote, passage)` returns `verified` or `not-found`, with offsets. A second function, `verifyCitation`, adds `unknown-source` and `malformed`, because the first function has no `n` and no attempt type.
+- **A-03 (§5).** Embedding, search and the gate run inside `createUIMessageStream`'s `execute`, right after `start`. The order on the wire is still the one §5 gives.
+- **A-04 (§11).** The route sends the answer's token usage on its finish chunk, so the measurement file can record it.
+- **A-05 (§7.1).** `composer.capPlaceholder` is not in the dictionary: its only use was #1's 20-message cap, which S-17 removes.
+- **A-06 (plan).** The dictionary and the locale modules land in their own task (Task 5), before any task that needs a string. No task keeps a temporary copy.
+
+**Proposals from the prototype**, approved by Felipe on 2026-09-29 ("todas ok") and cited as `[D: A-xx]`:
+
+| ID | Proposal | Section |
+|---|---|---|
+| A-07 | **S-10 made measurable.** The measurement set has 40 in-scope English questions plus 5 near-miss out-of-scope ones: LlamaIndex PDFs, a Qdrant collection, RAGAS faithfulness, Stable Diffusion with ONNX, and GraphQL with Apollo. That makes 45, in 3 runs of 15. Refusal accuracy is printed as supporting data, "r of k out-of-scope refused (gate g, model m); in-scope refused: x of n". A correct refusal is not a failure | 11 |
+| A-08 | **Rounding of the headline.** The rate and both interval bounds are whole percents, where a share below 100% never prints 100 and a share above 0 never prints 0. For example, 249/250 prints 99%. The alternative is plain rounding | 11 |
+| A-09 | **README line format.** "Q answers" counts the answers with at least one citation attempt, the set the bootstrap resamples. The interval prints as "95% CI 89–98%" | 11 |
+| A-10 | **Calibration rule 4.** "The lowest t on ties" has no literal minimum, because tied thresholds form intervals open at the bottom. The rule uses the midpoint of the lowest gap with the fewest errors, the same point rule 2 picks | 8 |
+| A-11 | **A Portuguese answer in the e2e.** The mock answers in English, so the e2e cannot check that a Portuguese question gets a Portuguese answer. That stays with rule 3 of §6.1 (pinned by the prompt unit test) and the production check of §12 step 4. The alternative is a mock scenario that answers in Portuguese | 10, 12 |
+| A-12 | **Page description** (metadata): "Answers questions from the AI SDK Core docs, citing each passage and checking every quote against it, by Felipe Rêgo." | 7 |
 
 ## Appendix A. Approved proposals (2026-09-28, "todas ok")
 
