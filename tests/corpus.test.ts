@@ -9,9 +9,11 @@ import {
   CORPUS_COMMIT,
   CORPUS_DIR,
   CORPUS_TAG,
+  INDEX_PATH,
   MAX_SECTION_WORDS,
 } from "@/lib/rag/config";
 import { corpusHash, corpusManifest, readCorpus } from "@/lib/rag/corpus";
+import { readIndexFile } from "@/lib/rag/index-file";
 
 const files = readCorpus(CORPUS_DIR);
 
@@ -113,6 +115,33 @@ describe("the chunks of the committed corpus", () => {
     for (const { id, text } of long) {
       expect(subheadings(text.split("\n").slice(1)), id).toEqual([]);
     }
+  });
+});
+
+// A stale index fails here: rebuild it with `pnpm build-index` (spec §4.3, §14).
+describe("corpus/index.json", () => {
+  const index = readIndexFile();
+
+  it("is the file at INDEX_PATH", () => {
+    expect(index).toStrictEqual(JSON.parse(readFileSync(INDEX_PATH, "utf8")));
+  });
+
+  it("was built from the committed corpus", () => {
+    expect(index.corpusHash).toBe(corpusHash(files));
+    expect(index.tag).toBe(CORPUS_TAG);
+    expect(index.commit).toBe(CORPUS_COMMIT);
+  });
+
+  it("holds exactly the chunks the chunker makes from the committed corpus (S-25)", () => {
+    const committed = index.chunks.map(({ id, file, heading, startLine, endLine, text }) => ({
+      id,
+      file,
+      heading,
+      startLine,
+      endLine,
+      text,
+    }));
+    expect(committed).toEqual(chunkCorpus(files));
   });
 });
 

@@ -19,3 +19,16 @@ export const APACHE_LICENSE_SHA256 =
 
 /** A ## section longer than this many whitespace-separated words is split at its ### (S-25). */
 export const MAX_SECTION_WORDS = 1500;
+
+/** The index built from the corpus (spec §4.2), shipped with the chat route (spec §4.4). */
+export const INDEX_PATH = "corpus/index.json";
+
+/** One threshold, or one per interface language when no single one separates both (§8, R-18). */
+export type RefusalThreshold = number | Readonly<Record<"en" | "pt-BR", number>>;
+
+/**
+ * The gate refuses when the best cosine score is below this (spec §8). The calibration of step 3
+ * freezes it here, with its date and the calibration file's hash. Until then it is unset, so a
+ * real-mode load throws (spec §4.3).
+ */
+export const REFUSAL_THRESHOLD: RefusalThreshold | null = null;
