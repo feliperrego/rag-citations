@@ -1,5 +1,10 @@
 import { expect, test, type Page, type Request } from "@playwright/test";
-import { SLOW_TRIGGER } from "@/lib/ai/mock-scenarios";
+import {
+  MALFORMED_TRIGGER,
+  NOT_FOUND_TRIGGER,
+  SLOW_TRIGGER,
+  UNKNOWN_SOURCE_TRIGGER,
+} from "@/lib/ai/mock-scenarios";
 import { messages } from "@/lib/i18n/messages";
 
 // E2E for the interface language (spec §7.1, §9, R-21), ported from #1: the production build in
@@ -129,12 +134,19 @@ const ENGLISH_ONLY = englishOnly(messages.en, messages["pt-BR"]);
  * The English-only strings found in the page's interface text or in any aria-label or
  * placeholder. The question and the answer are left out: they are the visitor's and the
  * model's words, and the mock answers in English (a real Portuguese answer keeps its quotes
- * in English too, R-12).
+ * in English too, R-12). So is the corpus text the page marks lang="en": headings, file names
+ * and passages (spec §3).
  */
 async function englishLeftovers(page: Page): Promise<string[]> {
   const texts = await page.evaluate(() => {
-    const skipped =
-      'script, style, [data-message-role="user"], [data-message-role="assistant"] > :first-child';
+    const skipped = [
+      "script",
+      "style",
+      '[data-message-role="user"]',
+      '[data-message-role="assistant"] > :first-child',
+      // Inside <body>: in English, <html lang="en"> would skip the whole page.
+      'body [lang="en"]',
+    ].join(", ");
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     const nodes: string[] = [];
     for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
@@ -581,12 +593,118 @@ test("the out-of-scope question gets the gate's refusal in the interface languag
   await waitForHydration(page);
   await page.getByRole("button", { name: PROMPTS_EN[3], exact: true }).click();
   await expect(answerText(page)).toHaveText(REFUSAL_EN);
+  await expect(assistantBubbles(page)).toHaveAttribute("data-refusal", "gate");
 
   await switchButton(page, "PT").click();
   await expectPortuguese(page);
   await newChatButton(page, "Nova conversa").click();
   await page.getByRole("button", { name: PROMPTS_PT[3], exact: true }).click();
   await expect(answerText(page)).toHaveText(REFUSAL_PT);
+  await expect(assistantBubbles(page)).toHaveAttribute("data-refusal", "gate");
+  await expectNoEnglish(page);
+});
+
+test("a Portuguese question under the English interface: the gate refuses in English (S-09); one past the gate gets verified English quotes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await waitForHydration(page);
+  const ask = (text: string) =>
+    postedBody(page, async () => {
+      await composer(page).fill(text);
+      await composer(page).press("Enter");
+    });
+
+  // The route cannot tell the question's language without a model call, so the gate refuses in
+  // the interface language (spec §8, S-09).
+  const refused = await ask(PROMPTS_PT[3]);
+  expect(refused.locale).toBe("en");
+  await expect(answerText(page)).toHaveText(REFUSAL_EN);
+  await expect(assistantBubbles(page)).toHaveAttribute("data-refusal", "gate");
+
+  // A Portuguese question the mock gate lets through (tests/mock-threshold.test.ts pins it). The
+  // mock answers in English; a real model answers in the question's language (spec §6.1 rule 3,
+  // checked by hand in production), and either way its quotes stay English and verify (R-12).
+  await newChatButton(page, "New chat").click();
+  const answered = await ask(PROMPTS_PT[2]);
+  expect(answered.locale).toBe("en");
+  expect(answered.message.parts).toEqual([{ type: "text", text: PROMPTS_PT[2] }]);
+  await expect(page.getByRole("button", { name: "Send message", exact: true })).toBeVisible({
+    timeout: 20_000,
+  });
+  await expect(userBubbles(page)).toHaveText([PROMPTS_PT[2]]);
+  const bubble = assistantBubbles(page);
+  await expect(bubble).not.toHaveAttribute("data-refusal");
+  await expect(bubble.locator('[data-citation-verified="true"]')).toHaveCount(2);
+  await expect(bubble.locator('[data-citation-verified="false"]')).toHaveCount(0);
+  await expect(
+    bubble.getByRole("region", { name: "Sources", exact: true }).getByRole("listitem"),
+  ).toContainText(["1 of 1 quotes verified", "1 of 1 quotes verified"]);
+});
+
+test("PT: the [n] buttons, the Sources list and an open popover are in Portuguese", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await waitForHydration(page);
+  await switchButton(page, "PT").click();
+  await expectPortuguese(page);
+
+  // An English in-scope question: in mock mode the gate may refuse a Portuguese one (spec §8).
+  await sendPortuguese(page, PROMPTS_EN[0]);
+  await expect(page.getByRole("button", { name: "Enviar mensagem", exact: true })).toBeVisible({
+    timeout: 20_000,
+  });
+  const bubble = assistantBubbles(page);
+  const sources = bubble.getByRole("region", { name: "Fontes", exact: true });
+  await expect(sources.getByRole("heading", { name: "Fontes", exact: true })).toBeVisible();
+  await expect(sources.getByRole("listitem")).toContainText([
+    "1 de 1 citações verificadas",
+    "1 de 1 citações verificadas",
+  ]);
+
+  await bubble.getByRole("button", { name: "Fonte 1", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.getByText("Citação verificada", { exact: true })).toBeVisible();
+  await expect(
+    dialog.getByRole("link", { name: "Ver fonte no GitHub", exact: true }),
+  ).toBeVisible();
+  await expectNoEnglish(page);
+});
+
+test("PT: the badges of citations that are not verified", async ({ page }) => {
+  await page.goto("/");
+  await waitForHydration(page);
+  await switchButton(page, "PT").click();
+  await expectPortuguese(page);
+
+  const cases = [
+    { trigger: NOT_FOUND_TRIGGER, name: "Fonte 1", badge: "Citação não encontrada na fonte" },
+    { trigger: UNKNOWN_SOURCE_TRIGGER, name: "Fonte 6", badge: "Fonte inexistente" },
+    {
+      trigger: MALFORMED_TRIGGER,
+      name: "Citação fora do formato esperado",
+      badge: "Citação fora do formato esperado",
+    },
+  ];
+  for (const [i, { trigger, name, badge }] of cases.entries()) {
+    await sendPortuguese(page, `${PROMPTS_EN[2]} ${trigger}`);
+    await expect(assistantBubbles(page)).toHaveCount(i + 1, { timeout: 20_000 });
+    await expect(page.getByRole("button", { name: "Enviar mensagem", exact: true })).toBeVisible({
+      timeout: 20_000,
+    });
+    const failed = assistantBubbles(page).last().locator('[data-citation-verified="false"]');
+    await expect(failed).toHaveAccessibleName(name);
+    await failed.click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByText(badge, { exact: true })).toBeVisible();
+    await expectNoEnglish(page);
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+  }
+  await expect(
+    assistantBubbles(page).first().getByRole("region", { name: "Fontes" }).getByRole("listitem"),
+  ).toContainText(["1 de 2 citações verificadas", "1 de 1 citações verificadas"]);
 });
 
 test.describe("9. a phone at 375×812 with touch", () => {

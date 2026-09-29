@@ -47,3 +47,16 @@ export function toSources(results: readonly SearchResult[]): Source[] {
     score,
   }));
 }
+
+const NO_SOURCES: readonly Source[] = [];
+
+/**
+ * The passages the data-sources part carried, or one shared empty list: a gate refusal has none
+ * (spec §5 step 6), and an answer has none until the part arrives.
+ */
+export function messageSources(message: RagUIMessage): readonly Source[] {
+  for (const part of message.parts) {
+    if (part.type === "data-sources") return part.data;
+  }
+  return NO_SOURCES;
+}

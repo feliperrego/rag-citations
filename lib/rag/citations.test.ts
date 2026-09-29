@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseAnswer, type Segment } from "./citations";
+import { parseAnswer, parseCodeSpans, type Segment } from "./citations";
 
 const text = (value: string): Segment => ({ type: "text", text: value });
 const code = (value: string): Segment => ({ type: "code", text: value });
@@ -172,5 +172,29 @@ describe("parseAnswer", () => {
       cite(2, "a single value"),
       text("."),
     ]);
+  });
+});
+
+// The same code spans outside answers: the popover and the Sources list show headings such as
+// "Generating Text › `streamText`" (R-10).
+describe("parseCodeSpans", () => {
+  it("splits a heading into text and code spans", () => {
+    expect(parseCodeSpans("Generating Text › `streamText` › `onError` callback")).toEqual([
+      text("Generating Text › "),
+      code("streamText"),
+      text(" › "),
+      code("onError"),
+      text(" callback"),
+    ]);
+  });
+
+  it("leaves citation markers and bracketed numbers as text", () => {
+    expect(parseCodeSpans('See [2] and [1: "a b c"].')).toEqual([
+      text('See [2] and [1: "a b c"].'),
+    ]);
+  });
+
+  it("returns no segment for empty text", () => {
+    expect(parseCodeSpans("")).toEqual([]);
   });
 });

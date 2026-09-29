@@ -46,7 +46,7 @@ const eslintConfig = defineConfig([
   // Interface text comes from lib/i18n/messages.ts (spec §7.1, as #1's T-18). The rule sees
   // JSX text only; the Portuguese e2e sweep covers attributes and strings outside JSX.
   {
-    files: ["components/chat/**", "components/footer.tsx"],
+    files: ["components/chat/**", "components/rag/**", "components/footer.tsx"],
     rules: {
       "react/jsx-no-literals": [
         "error",

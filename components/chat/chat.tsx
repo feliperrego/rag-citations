@@ -129,11 +129,12 @@ export function Chat({ modelLabel, isMock, commit, rateLimitPerHour }: ChatProps
     focusUnlessTouch(inputRef.current);
   };
 
-  // Esc stops from anywhere on the page, but only while busy (#1 D-S-06).
+  // Esc stops from anywhere on the page, but only while busy (#1 D-S-06). An Esc that closed a
+  // citation popover is marked as handled (defaultPrevented) and stops nothing.
   useEffect(() => {
     if (!busy) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !event.isComposing) handleStop();
+      if (event.key === "Escape" && !event.isComposing && !event.defaultPrevented) handleStop();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);

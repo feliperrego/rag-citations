@@ -8,6 +8,9 @@ import { createRetriever } from "@/lib/rag/retrieve";
 const EN_IN_SCOPE = messages.en.prompts.filter((_, i) => i !== OUT_OF_SCOPE_PROMPT);
 const EN_OUT_OF_SCOPE = messages.en.prompts[OUT_OF_SCOPE_PROMPT];
 const PT_OUT_OF_SCOPE = messages["pt-BR"].prompts[OUT_OF_SCOPE_PROMPT];
+// e2e/i18n.spec.ts asks this Portuguese prompt under the English interface and needs an answer;
+// in mock mode the other Portuguese in-scope prompts may be refused (spec §8).
+const PT_PAST_THE_GATE = messages["pt-BR"].prompts[2];
 
 // An e2e scenario question is a trigger appended to an in-scope EN question (spec §10). Every
 // pairing is checked, so the e2e tests may append a trigger to any of the three.
@@ -28,9 +31,12 @@ describe("MOCK_REFUSAL_THRESHOLD", () => {
     expect(retriever.threshold).toBe(MOCK_REFUSAL_THRESHOLD);
   });
 
-  it.each([...EN_IN_SCOPE, ...SCENARIO_QUESTIONS])("lets %j past the gate", async (question) => {
-    expect(await topScore(question)).toBeGreaterThanOrEqual(MOCK_REFUSAL_THRESHOLD);
-  });
+  it.each([...EN_IN_SCOPE, ...SCENARIO_QUESTIONS, PT_PAST_THE_GATE])(
+    "lets %j past the gate",
+    async (question) => {
+      expect(await topScore(question)).toBeGreaterThanOrEqual(MOCK_REFUSAL_THRESHOLD);
+    },
+  );
 
   it.each([EN_OUT_OF_SCOPE, PT_OUT_OF_SCOPE])("refuses %j at the gate", async (question) => {
     expect(await topScore(question)).toBeLessThan(MOCK_REFUSAL_THRESHOLD);

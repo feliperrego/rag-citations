@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { isRefusalText, thresholdFor } from "./refusal";
+import type { RagMetadata } from "./message";
+import { isRefusalText, refusalOf, thresholdFor } from "./refusal";
 
 // The refusal sentences, verbatim from spec §7.1 (R-17).
 const EN = "I don't know. The AI SDK Core docs I search don't cover that.";
@@ -37,5 +38,35 @@ describe("thresholdFor", () => {
     const threshold = { en: 0.45, "pt-BR": 0.38 };
     expect(thresholdFor(threshold, "en")).toBe(0.45);
     expect(thresholdFor(threshold, "pt-BR")).toBe(0.38);
+  });
+});
+
+// How a message is marked (spec §7, S-24): data-refusal="gate" or "model".
+describe("refusalOf", () => {
+  const gate: RagMetadata = { refusal: "gate", topScore: 0.12, threshold: 0.19, searchMs: 0.8 };
+  const answered: RagMetadata = { topScore: 0.42, threshold: 0.19, searchMs: 0.8 };
+
+  it("marks the gate's refusal from its metadata, even while it streams", () => {
+    expect(refusalOf({ metadata: gate, text: EN }, { streaming: true })).toBe("gate");
+    expect(refusalOf({ metadata: gate, text: PT }, { streaming: false })).toBe("gate");
+  });
+
+  it.each([
+    ["English", EN],
+    ["Portuguese", PT],
+  ])("marks a finished answer that is exactly the %s sentence as the model's", (_, text) => {
+    expect(refusalOf({ metadata: answered, text }, { streaming: false })).toBe("model");
+  });
+
+  it("waits until the answer has finished", () => {
+    expect(refusalOf({ metadata: answered, text: EN }, { streaming: true })).toBeNull();
+  });
+
+  it.each([
+    ["an answer", 'Use `embedMany` [1: "embed many values"].'],
+    ["the sentence followed by more text", `${EN} Try the reference docs.`],
+  ])("leaves %s unmarked", (_, text) => {
+    expect(refusalOf({ metadata: answered, text }, { streaming: false })).toBeNull();
+    expect(refusalOf({ text }, { streaming: false })).toBeNull();
   });
 });

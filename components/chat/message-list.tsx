@@ -1,5 +1,6 @@
 import type { ChatStatus } from "ai";
 import { useLocale } from "@/components/i18n/locale-provider";
+import { AssistantMessage } from "@/components/rag/assistant-message";
 import { Button } from "@/components/ui/button";
 import {
   hasVisibleText,
@@ -28,7 +29,7 @@ const REGENERATE_CLASS = "h-auto px-0 py-1 pointer-coarse:min-h-11";
 
 /**
  * The conversation (#1 spec §2.2, §2.4), without #1's time-to-first-token caption (R-07):
- * plain-text messages, captions and labels.
+ * the questions as plain text, the answers with their citations (spec §7), captions and labels.
  */
 export function MessageList({
   contentRef,
@@ -40,13 +41,14 @@ export function MessageList({
 }: MessageListProps) {
   const { t } = useLocale();
   const lastId = messages.at(-1)?.id;
+  const busy = isBusy(status);
 
   return (
     <div
       ref={contentRef}
       role="log"
       aria-label={t.list.label}
-      aria-busy={isBusy(status)}
+      aria-busy={busy}
       className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6"
     >
       {messages.map((message) => {
@@ -69,8 +71,11 @@ export function MessageList({
         const hasMeta = annotation?.stopped || annotation?.cutOff || showRegenerate;
 
         return (
-          <div key={message.id} data-message-role="assistant" className="flex flex-col gap-2">
-            <div className="whitespace-pre-wrap wrap-anywhere">{messageText(message)}</div>
+          <AssistantMessage
+            key={message.id}
+            message={message}
+            streaming={busy && message.id === lastId}
+          >
             {hasMeta && (
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                 {annotation?.stopped && <span>{t.list.stopped}</span>}
@@ -87,7 +92,7 @@ export function MessageList({
                 )}
               </div>
             )}
-          </div>
+          </AssistantMessage>
         );
       })}
 

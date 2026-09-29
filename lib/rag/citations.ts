@@ -34,17 +34,27 @@ function parseProse(text: string): Segment[] {
   return segments;
 }
 
-/** The text between two markers: code spans, and prose outside them (spec §6.2). */
-function parseBetweenMarkers(text: string): Segment[] {
-  const segments: Segment[] = [];
+/**
+ * Splits text into plain text and code spans, the minimal renderer's only markup (R-10). The
+ * answer uses it between markers; the popover and the Sources list use it for headings.
+ */
+export function parseCodeSpans(text: string): (TextSegment | CodeSegment)[] {
+  const segments: (TextSegment | CodeSegment)[] = [];
   let last = 0;
   for (const match of text.matchAll(CODE_SPAN)) {
-    segments.push(...parseProse(text.slice(last, match.index)));
+    if (match.index > last) segments.push({ type: "text", text: text.slice(last, match.index) });
     segments.push({ type: "code", text: match[2] });
     last = match.index + match[0].length;
   }
-  segments.push(...parseProse(text.slice(last)));
+  if (last < text.length) segments.push({ type: "text", text: text.slice(last) });
   return segments;
+}
+
+/** The text between two markers: code spans, and prose outside them (spec §6.2). */
+function parseBetweenMarkers(text: string): Segment[] {
+  return parseCodeSpans(text).flatMap((segment) =>
+    segment.type === "text" ? parseProse(segment.text) : [segment],
+  );
 }
 
 /**

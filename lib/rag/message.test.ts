@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Chunk } from "./chunk";
-import { toSources } from "./message";
+import { messageSources, type RagUIMessage, toSources } from "./message";
 
 function chunk(id: string, startLine: number, endLine: number): Chunk {
   return {
@@ -49,5 +49,32 @@ describe("toSources", () => {
 
   it("returns no sources for no results", () => {
     expect(toSources([])).toEqual([]);
+  });
+});
+
+describe("messageSources", () => {
+  const sources = toSources([{ chunk: chunk("30-embeddings", 12, 40), score: 0.61 }]);
+
+  it("returns the passages of the data-sources part", () => {
+    const message: RagUIMessage = {
+      id: "a1",
+      role: "assistant",
+      parts: [
+        { type: "data-sources", data: sources },
+        { type: "text", text: "An answer." },
+      ],
+    };
+    expect(messageSources(message)).toBe(sources);
+  });
+
+  // The same array every time, so a component can memoize on it (components/rag).
+  it("returns one shared empty list for a message without passages, such as a gate refusal", () => {
+    const refusal: RagUIMessage = {
+      id: "a1",
+      role: "assistant",
+      parts: [{ type: "text", text: "I don't know." }],
+    };
+    expect(messageSources(refusal)).toEqual([]);
+    expect(messageSources(refusal)).toBe(messageSources({ ...refusal, id: "a2" }));
   });
 });

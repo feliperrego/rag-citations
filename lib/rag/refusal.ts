@@ -1,6 +1,7 @@
 import type { Locale } from "@/lib/i18n/locale";
 import { messages } from "@/lib/i18n/messages";
 import type { RefusalThreshold } from "./config";
+import type { RagMetadata } from "./message";
 import { normalise } from "./verify";
 
 /**
@@ -20,6 +21,21 @@ const NORMALISED_REFUSALS = new Set(Object.values(REFUSAL_SENTENCES).map(normali
  */
 export function isRefusalText(answer: string): boolean {
   return NORMALISED_REFUSALS.has(normalise(answer));
+}
+
+/** How an assistant message refused: its data-refusal value (spec §7, S-24). */
+export type Refusal = "gate" | "model";
+
+/**
+ * "gate" when the metadata carries the gate's refusal; "model" when a finished answer is exactly
+ * a refusal sentence; otherwise null. Either value hides the Sources list (spec §7).
+ */
+export function refusalOf(
+  { metadata, text }: { metadata?: RagMetadata; text: string },
+  { streaming }: { streaming: boolean },
+): Refusal | null {
+  if (metadata?.refusal === "gate") return "gate";
+  return !streaming && isRefusalText(text) ? "model" : null;
 }
 
 /**
