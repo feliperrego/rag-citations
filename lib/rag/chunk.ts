@@ -115,7 +115,7 @@ function splitParts(lines: readonly string[], bodyStart: number): Part[] {
 }
 
 /** A GitHub-style slug: lower case, punctuation dropped, each space a hyphen. */
-function slugify(heading: string): string {
+export function slugify(heading: string): string {
   return heading
     .toLowerCase()
     .replace(/[^\p{L}\p{M}\p{N}\s_-]/gu, "")
