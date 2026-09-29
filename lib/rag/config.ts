@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n/locale";
+
 // The pinned corpus (spec §3, R-02): the AI SDK Core docs at the SDK version the app runs.
 export const CORPUS_REPO = "vercel/ai";
 export const CORPUS_VERSION = "7.0.114";
@@ -24,7 +26,7 @@ export const MAX_SECTION_WORDS = 1500;
 export const INDEX_PATH = "corpus/index.json";
 
 /** One threshold, or one per interface language when no single one separates both (§8, R-18). */
-export type RefusalThreshold = number | Readonly<Record<"en" | "pt-BR", number>>;
+export type RefusalThreshold = number | Readonly<Record<Locale, number>>;
 
 /**
  * The gate refuses when the best cosine score is below this (spec §8). The calibration of step 3
