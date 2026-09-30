@@ -739,5 +739,54 @@ test.describe("8. failure modes", () => {
       }));
       expect(widths.scroll).toBeLessThanOrEqual(widths.client);
     });
+
+    // A rotation that makes the text above the view take fewer lines (here the question and the
+    // answer's first paragraph): Chromium's scroll anchoring moves the view up by the lines saved.
+    // On the template's Linux CI that scroll event reached the hook before the resize observer
+    // pinned the view, so following stopped (template §14). The hook turns anchoring off while
+    // following, so the view never moves up. The resize is sent through CDP together with a read
+    // of scrollTop, which lands before the next frame and so sees a move up if there is one.
+    test("touch: a rotation never moves a followed view up", async ({ page }) => {
+      await page.goto("/");
+      await composer(page).tap();
+      await composer(page).fill(SLOW_QUESTION);
+      await sendButton(page).tap();
+      await waitUntilIdle(page);
+      await expect.poll(() => distanceFromBottom(page)).toBeLessThanOrEqual(2);
+      const before = (await scrollState(page)).scrollTop;
+
+      await scroller(page).evaluate((element) => {
+        (window as unknown as { scroller: Element }).scroller = element;
+        // An animation frame loop keeps the page rendering, so the frame after the resize waits
+        // for the next vsync and the read lands before it. On an idle page Chromium sometimes
+        // ran that frame first, and the resize observer had pinned the view by the read.
+        const tick = () => requestAnimationFrame(tick);
+        requestAnimationFrame(tick);
+      });
+      const cdp = await page.context().newCDPSession(page);
+      const scale = await page.evaluate(() => window.devicePixelRatio);
+      const [, read] = await Promise.all([
+        cdp.send("Emulation.setDeviceMetricsOverride", {
+          width: 812,
+          height: 375,
+          deviceScaleFactor: scale,
+          mobile: true,
+        }),
+        cdp.send("Runtime.evaluate", {
+          expression: "(window.scroller).scrollTop",
+          returnByValue: true,
+        }),
+      ]);
+      // Below 0: anchoring moved the view up. 0: the read landed before the frame, as meant.
+      // Above 0: the frame ran first and pinned the view, so the read proved nothing.
+      annotate("rotation-read-minus-before-px", read.result.value - before);
+      expect(read.result.value, "scrollTop at the first layout after rotating").toBeGreaterThanOrEqual(
+        before,
+      );
+      await expect
+        .poll(() => distanceFromBottom(page), { message: "distance from bottom after rotating" })
+        .toBeLessThanOrEqual(2);
+      await expect(jumpButton(page)).toHaveCount(0);
+    });
   });
 });
