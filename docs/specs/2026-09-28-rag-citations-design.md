@@ -296,7 +296,7 @@ The roadmap says #1's lessons go into the template when #2 starts [F: ROADMAP.md
 - **B7.** The repo-creation step #1 actually used.
 - **Doc corrections (rule 6):** template §10's "i18n: never" row is superseded by #1 and #2. Its "shared chat components" trigger has fired, and X-01 decides what happens.
 
-**The template's chat-components trigger** [F: template spec §10, line 381: "Markdown rendering, shared chat components | A second chat project needs the same component; then extract it"]. #2 is that second chat project. R-08 was approved with a wrong citation: its reason quoted template §10's "3 projects" row, which is about syncing fixes into existing projects, not about moving code into the template [F: template spec §10]. Felipe decided with the correct rule in view: option (a) of X-01 [D: X-01].
+**The template's chat-components trigger** [F: template spec §10 at template commit `edc5370`, line 381: "Markdown rendering, shared chat components | A second chat project needs the same component; then extract it". Corrected 2026-09-30 (rule 6): the line moved when the template's 2026-09-28 amendment (U-08) split that row in two, and X-01 has since marked the chat-components row done (template §14)]. #2 is that second chat project. R-08 was approved with a wrong citation: its reason quoted template §10's "3 projects" row, which is about syncing fixes into existing projects, not about moving code into the template [F: template spec §10]. Felipe decided with the correct rule in view: option (a) of X-01 [D: X-01].
 
 ## 14. Risks
 
@@ -314,7 +314,7 @@ The roadmap says #1's lessons go into the template when #2 starts [F: ROADMAP.md
 - The rows of §2's table.
 - One threshold per language: §8's rule 3.
 - #3's reuse of #2's questions: #3's design [D: R-20].
-- The chat shell and i18n in the template: when #2 ships, before #6 starts [D: X-01].
+- The chat shell and i18n in the template: when #2 ships, before #6 starts [D: X-01]. Done 2026-09-30: moved to the template at `d333861`; this repo keeps its own copy (template §14).
 
 ## 16. Results
 
