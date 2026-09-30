@@ -746,14 +746,22 @@ test.describe("8. failure modes", () => {
     // pinned the view, so following stopped (template §14). The hook turns anchoring off while
     // following, so the view never moves up. The resize is sent through CDP together with a read
     // of scrollTop, which lands before the next frame and so sees a move up if there is one.
+    // That read proves something only on runs where it lands first, which depends on the runner's
+    // frame timing, so the test also checks the cause, which needs no timing: on a followed view
+    // that overflows, the scroll container's computed overflow-anchor is "none".
     test("touch: a rotation never moves a followed view up", async ({ page }) => {
       await page.goto("/");
       await composer(page).tap();
       await composer(page).fill(SLOW_QUESTION);
       await sendButton(page).tap();
       await waitUntilIdle(page);
+      await expect.poll(async () => (await scrollState(page)).overflow).toBeGreaterThan(400);
       await expect.poll(() => distanceFromBottom(page)).toBeLessThanOrEqual(2);
       const before = (await scrollState(page)).scrollTop;
+      expect(
+        await scroller(page).evaluate((el) => getComputedStyle(el).overflowAnchor),
+        "scroll anchoring is off while following",
+      ).toBe("none");
 
       await scroller(page).evaluate((element) => {
         (window as unknown as { scroller: Element }).scroller = element;
