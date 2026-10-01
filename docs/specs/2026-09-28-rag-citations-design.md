@@ -25,6 +25,7 @@ Decision references:
   - approach A (§2).
   Design sections 1–3 were then approved "todas ok". Those proposals, R-01 to R-23, are recorded verbatim in Appendix A and cited as `[D: R-xx]`.
 - **Research brief** (2026-09-28, read-only): five researchers plus a synthesis. Cited as `[F: brief]` when the brief checked the fact itself; otherwise the underlying source is named.
+- **Q1–Q12 and S1–S10** (2026-10-01): on that day Felipe replaced the roadmap's 14 small projects with four product-like ones, P1 to P4, and approved Q1–Q12 and S1–S10 ("todas ok"; S6 rejected) [F: ROADMAP.md, "Status of this list"]. Cited as `[D: Qn, 2026-10-01]`; S1–S10 are not this spec's S-01 to S-28. Where an old roadmap number (#3 to #14) set a live trigger here, it was remapped on 2026-10-01 with a note saying so; dated records keep the old numbers. P1 to P4 in such notes are those projects, not the wrap-up review's items P1 and P2 in §16.
 
 ## 1. Purpose and success criteria
 
@@ -48,15 +49,15 @@ Rejected: B, a search tool the model calls, because it overlaps project #6 and b
 
 | Not in #2 | Why | Trigger |
 |---|---|---|
-| A vector database | [D-chat-3]. About 300 vectors are searched far under 1 ms in memory [F: brief, local benchmark of 0.32 ms for top-5 over 1536×300]. The README shows the figure measured by script (§11) | more than ~5,000 vectors, writes at runtime, or project #14 starts [D-chat-3]. Then a vector-database adapter goes behind the same `VectorStore` interface; which database is decided at the trigger |
+| A vector database | [D-chat-3]. About 300 vectors are searched far under 1 ms in memory [F: brief, local benchmark of 0.32 ms for top-5 over 1536×300]. The README shows the figure measured by script (§11) | more than ~5,000 vectors, writes at runtime, or P3 starts [D-chat-3; D: Q2, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #14 became P3 (ROADMAP); this said "project #14 starts". Then a vector-database adapter goes behind the same `VectorStore` interface; which database is decided at the trigger |
 | Follow-up questions that need history (query rewriting) | each question is retrieved on its own [D: R-06] | the limitation shows up in real use [D: R-06] |
-| A reranker | out of #2's scope [D: S-15] | #3's design chooses its one improvement; reranking is a candidate [D: S-15] |
-| Comparing chunking strategies | that is #4 [F: ROADMAP.md] | #4 starts |
-| Comparing with keyword search | that is #14 [F: ROADMAP.md] | #14 starts |
+| A reranker | out of #2's scope [D: S-15] | P1's first measurement is published; then P1 chooses its stretch "one improvement", and reranking is a candidate [D: S-15; D: Q2, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #3 became P1 (ROADMAP); this said "#3's design chooses its one improvement" |
+| Comparing chunking strategies | that was #4, which the roadmap dropped on 2026-10-01 [F: ROADMAP.md] | in P1's first measurement, retrieval failures cause 3 or more failed tickets; then it becomes P1's improvement [D: Q2, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #4 was dropped (ROADMAP); this said "#4 starts", and the Why said "that is #4" |
+| Comparing with keyword search | that was #14, now P3's Search screen [F: ROADMAP.md] | P3 starts [D: Q2, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #14 became P3 (ROADMAP); this said "#14 starts", and the Why said "that is #14" |
 | Markdown or code blocks in answers | plain text, as in #1 [D: R-10] | a script over `measurements/citations-*.json` counts more than 4 of the ~40 answers with code-like text outside backticks, such as `=>`, `{` or `import` [D: S-14] |
 | "About Felipe" prompts | the RAG answers only from the docs [D: R-16] | — |
 | AI Elements | template rule: chat UIs are hand-built on shadcn/ui [F: template spec line 58] | — |
-| Embeddings, i18n and the chat shell in the template | [D: R-08]. The template's own chat-components trigger has fired (§13); X-01 moves it | when #2 ships, before the next chat project (#6) starts: extract the shared shell and i18n into the template, from #1 and #2 [D: X-01] |
+| Embeddings, i18n and the chat shell in the template | [D: R-08]. The template's own chat-components trigger has fired (§13); X-01 moves it | when #2 ships, before the next chat project (#6) starts: extract the shared shell and i18n into the template, from #1 and #2 [D: X-01]. That trigger fired on 2026-09-29, and the shell and i18n moved on 2026-09-30 [F: §15; ROADMAP.md]. Embeddings: P1 copies them, and they move into the template when P3 starts [D: Q6, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #6 became P2, and P1 is now the next project with a chat (ROADMAP); the fired X-01 trigger keeps its wording |
 
 ## 3. Corpus
 
@@ -262,7 +263,7 @@ The product name "RAG with Citations", the model id and "Felipe Rêgo" stay untr
   - A "Decisions" line explains the in-memory index with the median `searchMs` printed by the same script [D-chat-3; D: S-08].
 - **Cost:** about US$ 0.03, at most about US$ 0.09 [P: arithmetic].
 - **Refusal accuracy** stays supporting data under "How it's measured", never a second headline, which keeps the one-number rule [D: S-10].
-- **#3** builds its own gold set; whether it reuses #2's measurement questions is decided when #3's design starts [D: R-20].
+- **P1** builds its own gold set; whether it reuses #2's measurement questions is decided when P1's design starts [D: R-20; D: Q2, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #3 became P1 (ROADMAP); this said "#3" both times.
 
 ## 12. Rollout [D: R-22]
 
@@ -313,7 +314,7 @@ The roadmap says #1's lessons go into the template when #2 starts [F: ROADMAP.md
 
 - The rows of §2's table.
 - One threshold per language: §8's rule 3.
-- #3's reuse of #2's questions: #3's design [D: R-20].
+- P1's reuse of #2's questions: P1's design [D: R-20; D: Q2, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #3 became P1 (ROADMAP).
 - The chat shell and i18n in the template: when #2 ships, before #6 starts [D: X-01]. Done 2026-09-30: moved to the template at `d333861`; this repo keeps its own copy (template §14).
 
 ## 16. Results
@@ -361,18 +362,18 @@ To be recorded, dated, as the rollout steps happen.
 - **A-14 in production** [F: CI, `vercel inspect`, `/api/health`]. Pushing `24b967e` with Felipe's OK redeployed production. CI passed, the deploy is Ready, the page serves `data-commit` `24b967e`, and `/api/health` reports the real model and Upstash.
 - **Phone check** [D: Felipe, 2026-09-29]. Felipe checked the live demo on his phone after the A-14 deploy: "Phone check ok". That closes step 4.
 - **Measurement, run 1** [F: `measurements/citations-run-1-2026-09-29.json`], from "Fortaleza, home fibre" at 18:00 UTC on `24b967e`: 15 questions, 19 of 21 citations verified. Two findings, and Felipe's answers (2026-09-29, "D1 a, D2 a") [D]:
-  - **D1.** 5 of the 15 in-scope questions were refused: 4 by the gate (for example "How can I smooth out a choppy text stream?", top score 0.41 against the English threshold 0.442) and 1 by the model. The measurement questions paraphrase the docs more than the calibration set did [P: inference]. The headline counts citations, so refusals do not lower it; they shrink n and widen the interval, and the README prints the in-scope refusals. Answer: (a) keep the frozen threshold and publish. Improving the gate is a candidate for #3's "one improvement" (ROADMAP). Trigger: when #3 starts.
-  - **D2.** In m07 the model escaped the inner quotes inside its marker, `` [1: "You can add `.describe(\"...\")`…"] ``, though its own text writes `.describe("...")`. It counts as not found. The other failure, m13, is a real one: the model dropped a comma from the code it quoted. Answer: (a) keep the rule for this measurement. Changing it after seeing measurement data would choose the rule by its result; A-14 came from a production check, before the measurement. A-15 (accept `\"` as `"`) is a candidate for #3. Trigger: when #3 starts.
+  - **D1.** 5 of the 15 in-scope questions were refused: 4 by the gate (for example "How can I smooth out a choppy text stream?", top score 0.41 against the English threshold 0.442) and 1 by the model. The measurement questions paraphrase the docs more than the calibration set did [P: inference]. The headline counts citations, so refusals do not lower it; they shrink n and widen the interval, and the README prints the in-scope refusals. Answer: (a) keep the frozen threshold and publish. Improving the gate is a candidate for P1's stretch "one improvement" (ROADMAP). Trigger: P1's first measurement is published [D: Q2, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #3 became P1 (ROADMAP); this said "#3's" and "when #3 starts".
+  - **D2.** In m07 the model escaped the inner quotes inside its marker, `` [1: "You can add `.describe(\"...\")`…"] ``, though its own text writes `.describe("...")`. It counts as not found. The other failure, m13, is a real one: the model dropped a comma from the code it quoted. Answer: (a) keep the rule for this measurement. Changing it after seeing measurement data would choose the rule by its result; A-14 came from a production check, before the measurement. A-15 (accept `\"` as `"`) is a candidate for P1's stretch "one improvement". Trigger: P1's first measurement is published [D: Q2, 2026-10-01]. Remapped 2026-10-01: the roadmap's old #3 became P1 (ROADMAP); this said "a candidate for #3" and "when #3 starts".
 - **Measurement** [F: `measurements/citations-2026-09-29.json`, printed by `pnpm aggregate-citations`]. Three runs on 2026-09-29, at 18:00, 20:00 and 22:00 UTC, all on `24b967e` with `openai/gpt-6-luna` from "Fortaleza, home fibre". After run 2 Felipe canceled run 3, then asked for it again at 18h local; the quota guard allowed 22:00 UTC (19h local) at the earliest, so it ran then [D: Felipe, 2026-09-29].
   - Headline: "RAG with Citations — 85% of citations verified verbatim (n=71 citations in 32 answers, 95% CI 74–94%)". The README lines are the ones the script printed.
   - All 5 out-of-scope questions were refused by the gate. In-scope refused: 8 of 40, 5 by the gate and 3 by the model (D1).
   - The 11 unverified citations are all `not-found`. By script over their quotes: 4 carry a backslash escape the model wrote inside the marker, `\"` in m07 and `\n` three times in m34 (the D2 class); 2 have fewer than 3 words (m30, m31). The other 5, by my reading [P]: the model edited or joined the text. m13 dropped a comma, m17 a `//`, m31 joined two list items, m36 two table rows, and m33 dropped a link's backticks along with its syntax, which A-14 keeps.
   - S-14: `pnpm count-code-answers` counts 0 of 32 answers with code-like text outside backticks, so the trigger did not fire, and none of the 32 answers has a fenced block [F: script]. Answers stay plain text [D: R-10]. The fenced blocks of the production checks came from 2 answers outside the measurement.
-  - For #3: the escape class covers `\n` as well as `\"`, 4 of the 11 unverified citations. Felipe's D2 answer covered `\"`, the only escape seen after run 1; reading `\n` as a line break too is my proposal [P], because the `\n` cases appeared in run 3. The ROADMAP candidate says so.
+  - For P1's stretch "one improvement": the escape class covers `\n` as well as `\"`, 4 of the 11 unverified citations. Felipe's D2 answer covered `\"`, the only escape seen after run 1; reading `\n` as a line break too is my proposal [P], because the `\n` cases appeared in run 3. The ROADMAP candidate says so. Remapped 2026-10-01: the roadmap's old #3 became P1 (ROADMAP); this said "For #3".
 - **Wrap-up review** [F: an independent review of the README, §16, §18 and the ROADMAP entry, each finding checked by a skeptic]. It confirmed 14 findings; the doc and code fixes are in `fe5df57` and `778e394`, each with a note of what the line said before. Two changed README text, and Felipe approved both on 2026-09-29 ("todas ok") [D]:
   - **P1.** The ids in brackets after each answer classification name in-scope answers only, and the line now says so: "gate refusal 10 (in scope: m03, …)". Before, 10 gate refusals showed 5 ids, because the 5 correct out-of-scope refusals are counted under refusal accuracy, not listed.
   - **P2.** The caveat names dash style: "allowing only whitespace, quote and dash style, …". The normalisation always folded dashes (§6.3); the README left them out.
-- **Size (R-23).** Felipe's real hours on #2 were not measured: asked on 2026-09-29, he answered "não sei" [D]. What git shows [F]: the spec was committed on 2026-09-28 at 18:30 -03, after that day's design session, and the last commit is from 2026-09-29 at 20:24 -03, with execution agent-driven in between; the roadmap estimated 2 days. The ROADMAP's calibration trigger moves to #3, with a way to measure there.
+- **Size (R-23).** Felipe's real hours on #2 were not measured: asked on 2026-09-29, he answered "não sei" [D]. What git shows [F]: the spec was committed on 2026-09-28 at 18:30 -03, after that day's design session, and the last commit is from 2026-09-29 at 20:24 -03, with execution agent-driven in between; the roadmap estimated 2 days. The ROADMAP's calibration trigger moves to #3, with a way to measure there. Remapped 2026-10-01: the roadmap's old #3 became P1 (ROADMAP), so the trigger is now: when P1 starts, measure Felipe's time on it [D: Q3, 2026-10-01].
 
 ### Fixes carried over from X-01 (2026-09-30)
 
@@ -418,7 +419,7 @@ All items below were approved on 2026-09-28 ("todas ok"); X-01 took option (a).
 | S-07 | Mock and real build modes of `index.json`, and the loading rules | 4.2, 4.3 |
 | S-08 | `searchMs` in the message metadata, printed by the measurement script for the README's "Decisions" line | 4.4, 11 |
 | S-14 | The code-block trigger counted by script over the measurement file | 2 |
-| S-15 | No reranker in #2; #3's design decides | 2 |
+| S-15 | No reranker in #2; #3's design decides (#3 is now P1, ROADMAP 2026-10-01; §2 has the trigger) | 2 |
 | S-16 | The Sources list shows only cited passages, with per-quote results | 7 |
 | S-17 | The client sends only the latest user message; no 20-message cap | 5 |
 | S-18 | `EMBEDDING_MODEL` for the build; the route embeds with the index's own model | 4.2 |
@@ -473,7 +474,7 @@ Before the plan was written, a throwaway prototype of this spec was built, revie
 **Section 1, architecture and flow:**
 - R-01: Repo `feliperrego/rag-citations`, created from the updated template.
 - R-02: Pin the docs to tag `ai@7.0.114`, the same SDK version the app uses; check that the tag exists; keep `corpus/SOURCES.md` with URL, commit and a copy of the license.
-- R-03: One chunk per `##` section, code blocks whole; comparing other chunking strategies is left to #4.
+- R-03: One chunk per `##` section, code blocks whole; comparing other chunking strategies is left to #4. (#4 was dropped, ROADMAP 2026-10-01; §2 has its trigger.)
 - R-04: k = 5 passages per question.
 - R-05: The answer model is #1's (`openai/gpt-6-luna`, 1024-token cap).
 - R-06: Each question is retrieved on its own, and the model sees only the current question plus the passages, no history; follow-ups do not work. Trigger for query rewriting: the limitation shows up in real use.
@@ -494,7 +495,7 @@ Before the plan was written, a throwaway prototype of this spec was built, revie
 - R-17: The fixed refusal text. EN: "I don't know. The AI SDK Core docs I search don't cover that." PT: "Não sei. A documentação do AI SDK Core que eu consulto não cobre isso."
 - R-18: A single threshold chosen with EN and PT questions together. Rule fixed before seeing the numbers: if no single threshold separates both languages, one threshold per interface language.
 - R-19: In mock mode the index is recomputed in memory with the mock embedder, from the text inside `index.json`; no extra file; a mock threshold of its own.
-- R-20: #2 has its own sets (calibration and measurement); #3 builds its gold set and decides later whether to reuse anything.
+- R-20: #2 has its own sets (calibration and measurement); #3 builds its gold set and decides later whether to reuse anything. (#3 is now P1, ROADMAP 2026-10-01; §11 and §15 have the trigger.)
 - R-21: The EN/PT interface strings follow #1's pattern and go in the spec for review.
 - R-22: Delivery order: 0 template update (own short design); 1 spec → plan from a prototype → execution with mocks; 2 with OK: repo, Vercel project, Upstash integration as in #1; 3 with OK: real index and calibration (< US$ 0.01, Gateway credentials through `vercel env pull`); 4 deploy and production checks; 5 with OK: measurement and README.
 - R-23: Size 2 days, as in the roadmap; record the real hours to calibrate later estimates.
